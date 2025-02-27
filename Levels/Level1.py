@@ -1,12 +1,14 @@
+from ..Globals import Config, Entity
+
 class Level1:
   def execute():
     print('Code Here')
 
     # init procedure: FPS, ...
 
-    while running:
+    while Config.running:
       # clear screen
-      Maze.drawing()
-      Pacman.keyboardHandle()
-      for ghost in ghosts:
+      Entity.Maze.drawing()
+      Entity.Pacman.keyboardHandle()
+      for ghost in Entity.ghosts:
         ghost.move()

@@ -1,5 +1,5 @@
+from Globals import Config, Entity
 from Levels import Levels
-running = True
 
 def mainBusiness():
   #Levels.Level1().excute()
