@@ -10,7 +10,6 @@ class Maze:
         self.map = copy.deepcopy(Board.boards)
 
     def drawing(self):
-       
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
                 

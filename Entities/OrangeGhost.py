@@ -1,6 +1,6 @@
-from .GhostInterface import GhostStrategy
+from .GhostInterface import GhostInterface
 
-class OrangeGhost(GhostStrategy):
+class OrangeGhost(GhostInterface):
     def move(self, position):
         print("Code Here")
     

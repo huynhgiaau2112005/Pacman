@@ -65,6 +65,8 @@ class MovingEntity(Entity):
         return 0 < self.xPos < Config.width and 0 < self.yPos < Config.height
 
     def updatePos(self):
+        # ghost, x y nhân jđược từ thuật toán
+        # pacman, x y nhận được từ bàn phim
         pass
 
     def getRect(self):
@@ -81,10 +83,5 @@ class MovingEntity(Entity):
         self.ySpeed = 0
         self.subImg = 0
     
-class StaticEntity(Entity):
-    def __init__(self, xPos, yPos, size):
-        super().__init__(xPos, yPos, size)
-        self.rect = pygame.Rect((xPos, yPos), (size, size))
-
-    def getRect(self):
-        return self.rect
+    
+    

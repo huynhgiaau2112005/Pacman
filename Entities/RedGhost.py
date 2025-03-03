@@ -2,9 +2,9 @@
 
 # Tham khảo BlueGhost.py
 
-from .GhostInterface import GhostStrategy
+from .GhostInterface import GhostInterface
 
-class RedGhost(GhostStrategy):
+class RedGhost(GhostInterface):
     def move(self, position):
         print("Code Here")
     

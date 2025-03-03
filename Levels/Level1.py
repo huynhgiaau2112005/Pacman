@@ -5,7 +5,7 @@ import pygame
 
 class Level1:
     def __init__(self):
-        self.maze = EM().maze
+        pass
 
     def execute(self):
         clock = pygame.time.Clock()
@@ -19,7 +19,7 @@ class Level1:
                         print("Phím Q được ấn")
                         Config.running = False
 
-            self.maze.drawing()
+            EM().maze.drawing()
             pygame.display.flip()
             clock.tick(Config.fps)
             #Entity.Pacman.keyboardHandle()

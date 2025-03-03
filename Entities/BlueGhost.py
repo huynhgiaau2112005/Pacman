@@ -1,7 +1,7 @@
 # # BFS
-from .GhostInterface import GhostStrategy
+from .GhostInterface import GhostInterface
 
-class BlueGhost(GhostStrategy):
+class BlueGhost(GhostInterface):
     def move(self, position):
         print("Code Here")
 
