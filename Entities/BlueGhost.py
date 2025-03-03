@@ -1,6 +1,9 @@
-# BFS
-from GhostInterface import GhostInterface
+# # BFS
+from .GhostInterface import GhostStrategy
 
-class RedGhost(GhostInterface):
-  def move(self, position):
-    print("Code Here")
+class BlueGhost(GhostStrategy):
+    def move(self, position):
+        print("Code Here")
+
+    def getTargetPos(self, ghost, pacman):
+        print("BFS")

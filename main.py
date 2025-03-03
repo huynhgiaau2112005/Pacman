@@ -1,8 +1,9 @@
-from Globals import Config, Entity
-from Levels import Levels
+from Levels import *
+import pygame
 
 def mainBusiness():
-  #Levels.Level1().excute()
+  pygame.init()
+  Level1().execute()
   #Levels.Level2().excute()
   #Levels.Level3().excute()
   #Levels.Level4().excute()

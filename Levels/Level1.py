@@ -1,14 +1,27 @@
-from ..Globals import Config, Entity
+from EntitiesManager import EntitiesManager as EM
+from Config import Config
+import pygame
+
 
 class Level1:
-  def execute():
-    print('Code Here')
+    def __init__(self):
+        self.maze = EM().maze
 
-    # init procedure: FPS, ...
+    def execute(self):
+        clock = pygame.time.Clock()
 
-    while Config.running:
-      # clear screen
-      Entity.Maze.drawing()
-      Entity.Pacman.keyboardHandle()
-      for ghost in Entity.ghosts:
-        ghost.move()
+        while Config.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    Config.running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        print("Phím Q được ấn")
+                        Config.running = False
+
+            self.maze.drawing()
+            pygame.display.flip()
+            clock.tick(Config.fps)
+            #Entity.Pacman.keyboardHandle()
+            #for ghost in Entity.ghosts:
+            #ghost.move()
