@@ -2,7 +2,6 @@ from EntitiesManager import EntitiesManager as EM
 from Config import Config
 import pygame
 
-
 class Level1:
     def __init__(self):
         pass
@@ -18,8 +17,8 @@ class Level1:
                     if event.key == pygame.K_q:
                         print("Phím Q được ấn")
                         Config.running = False
-
-            EM().maze.drawing()
+            EM().maze.draw()
+            EM().pacman.draw()
             pygame.display.flip()
             clock.tick(Config.fps)
             #Entity.Pacman.keyboardHandle()

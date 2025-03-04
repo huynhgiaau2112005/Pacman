@@ -2,6 +2,9 @@
 from .GhostInterface import GhostInterface
 
 class BlueGhost(GhostInterface):
+    def draw(self):
+        print('draw')
+
     def move(self, position):
         print("Code Here")
 

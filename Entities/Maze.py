@@ -7,9 +7,9 @@ pygame.init()
 
 class Maze:
     def __init__(self):
-        self.map = copy.deepcopy(Board.boards)
+        self.map = copy.deepcopy(Board.maze)
 
-    def drawing(self):
+    def draw(self):
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
                 

@@ -1,9 +1,11 @@
 from Levels import *
+import Config
 import pygame
 
 def mainBusiness():
+  Config.setup()
   pygame.init()
-  Level1().execute()
+  Level4().execute()
   #Levels.Level2().excute()
   #Levels.Level3().excute()
   #Levels.Level4().excute()

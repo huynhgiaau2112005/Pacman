@@ -1,14 +1,6 @@
-from ..entitiesmanager import Config, Entity
-
 class Level6:
-  def execute():
+  def __init__(self):
+    pass
+  
+  def execute(self):
     print('Code Here')
-
-    # init procedure: FPS, ...
-
-    while Config.running:
-      # clear screen
-      Entity.Maze.drawing()
-      #Entity.Pacman.keyboardHandle()
-      #for ghost in Entity.ghosts:
-        #ghost.move()
