@@ -2,22 +2,41 @@
 
 # Tham khảo BlueGhost.py
 
+from .Entity import Entity
 from .GhostInterface import GhostInterface
-from Config import Config, Material, Board
+from Config import Config, Material, Board, Object
 import heapq
 
 class RedGhost(GhostInterface):
     def draw(self):
-        realX = Config.redGhostX * Config.p_height #+ (0.5 * Config.p_height)
-        realY = Config.redGhostY * Config.p_width #+ (0.5 * Config.p_width)
-
+        realX = Object.realRedGhostX
+        realY = Object.realRedGhostY
         Config.screen.blit(Material.RedGhostImage, (realY, realX))
         
-    def move(self, position):
-        print("Code Here")
-    
+    def move(self):
+        x, y = Object.redGhostX, Object.redGhostY
+
+        targetX, targetY = Entity.getRealCoordinates((x, y), Object.RED_GHOST_SIZE) # tọa độ thực muốn đi đến
+        realX, realY = Object.realRedGhostX, Object.realRedGhostY # tọa độ thực hiện tại
+
+        dx, dy = (targetX - realX), (targetY - realY)
+        sX = Config.p_height / 15
+        sY = Config.p_width / 15
+        if abs(dx) >= sX:
+            realX = realX + dx / abs(dx) * sX
+        else:
+            realX = targetX
+        
+        if abs(dy) >= sY:
+            realY = realY + dy / abs(dy) * sY
+        else:
+            realY = targetY
+
+        Object.realRedGhostX = realX
+        Object.realRedGhostY = realY
+        
     def heuristic(self, ghostX, ghostY):
-        return abs(ghostX - Config.pacmanX) + abs(ghostY - Config.pacmanY)
+        return abs(ghostX - Object.pacmanX) + abs(ghostY - Object.pacmanY)
     
     def getTargetPos(self, ghost, pacman): # A*
         (posX, posY) = ghost
@@ -53,8 +72,8 @@ class RedGhost(GhostInterface):
         return []
     
     def updatePos(self):
-        oldX, oldY = Config.redGhostX, Config.redGhostY
-        newPos = self.getTargetPos((oldX, oldY), (Config.pacmanX, Config.pacmanY))
+        oldX, oldY = Object.redGhostX, Object.redGhostY
+        newPos = self.getTargetPos((oldX, oldY), (Object.pacmanX, Object.pacmanY))
         
         if newPos:
             newX, newY = newPos
@@ -62,6 +81,6 @@ class RedGhost(GhostInterface):
             Board.coordinates[oldX][oldY] = Board.BLANK
             Board.coordinates[newX][newY] = Board.RED_GHOST
 
-            Config.redGhostX = newX
-            Config.redGhostY = newY
+            Object.redGhostX = newX
+            Object.redGhostY = newY
 

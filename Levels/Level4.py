@@ -9,7 +9,9 @@ class Level4:
   def execute(self):
     clock = pygame.time.Clock()
 
+    countFrames = 0
     while Config.running:
+
       Config.screen.fill('black')
 
       for event in pygame.event.get():
@@ -19,13 +21,16 @@ class Level4:
           if event.key == pygame.K_q:
             print("Phím Q được ấn")
             Config.running = False
+      
+      if countFrames % 15 == 0:
+        EM().redGhost.updatePos()
+      
+      EM().redGhost.move()
 
       EM().maze.draw()
-
       EM().pacman.draw()
-
-      EM().redGhost.updatePos()
       EM().redGhost.draw()
 
       pygame.display.flip()
       clock.tick(Config.fps)
+      countFrames += 1
