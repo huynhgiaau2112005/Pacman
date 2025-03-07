@@ -48,16 +48,16 @@ class Color:
   color_fence = 'white'
 
 class Material:
-  BlueGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/blue.png"), (Object.BLUE_GHOST_SIZE, Object.BLUE_GHOST_SIZE))
-  RedGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/red.png"), (Object.RED_GHOST_SIZE, Object.RED_GHOST_SIZE))
-  PinkGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/pink.png"), (Object.PINK_GHOST_SIZE, Object.PINK_GHOST_SIZE))
-  OrangeGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/orange.png"), (Object.ORANGE_GHOST_SIZE, Object.ORANGE_GHOST_SIZE))
-  DeadGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/dead.png"), (Config.p_height, Config.p_width))
-  PowerupImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/powerup.png"), (Config.p_height, Config.p_width))
-  Pacman1Image = pygame.transform.scale(pygame.image.load("Assets/player_images/1.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
-  Pacman2Image = pygame.transform.scale(pygame.image.load("Assets/player_images/2.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
-  Pacman3Image = pygame.transform.scale(pygame.image.load("Assets/player_images/3.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
-  Pacman4Image = pygame.transform.scale(pygame.image.load("Assets/player_images/4.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
+  BlueGhostImage = pygame.transform.scale(pygame.image.load("Pacman/Assets/ghost_images/blue.png"), (Object.BLUE_GHOST_SIZE, Object.BLUE_GHOST_SIZE))
+  RedGhostImage = pygame.transform.scale(pygame.image.load("Pacman/Assets/ghost_images/red.png"), (Object.RED_GHOST_SIZE, Object.RED_GHOST_SIZE))
+  PinkGhostImage = pygame.transform.scale(pygame.image.load("Pacman/Assets/ghost_images/pink.png"), (Object.PINK_GHOST_SIZE, Object.PINK_GHOST_SIZE))
+  OrangeGhostImage = pygame.transform.scale(pygame.image.load("Pacman/Assets/ghost_images/orange.png"), (Object.ORANGE_GHOST_SIZE, Object.ORANGE_GHOST_SIZE))
+  DeadGhostImage = pygame.transform.scale(pygame.image.load("Pacman/Assets/ghost_images/dead.png"), (Config.p_height, Config.p_width))
+  PowerupImage = pygame.transform.scale(pygame.image.load("Pacman/Assets/ghost_images/powerup.png"), (Config.p_height, Config.p_width))
+  Pacman1Image = pygame.transform.scale(pygame.image.load("Pacman/Assets/player_images/1.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
+  Pacman2Image = pygame.transform.scale(pygame.image.load("Pacman/Assets/player_images/2.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
+  Pacman3Image = pygame.transform.scale(pygame.image.load("Pacman/Assets/player_images/3.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
+  Pacman4Image = pygame.transform.scale(pygame.image.load("Pacman/Assets/player_images/4.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
   
 class Board:
 # 0 = empty black rectangle, 1 = dot, 2 = big dot, 3 = vertical line,

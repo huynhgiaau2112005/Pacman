@@ -5,12 +5,12 @@ import pygame
 def mainBusiness():
   Config.setup()
   pygame.init()
-  Level4().execute()
-  #Levels.Level2().excute()
-  #Levels.Level3().excute()
-  #Levels.Level4().excute()
-  #Levels.Level5().excute()
-  #Levels.Level6().excute()
+  # Level4().execute()
+  # Level3().execute()
+  # Level2().excute()
+  # Level4().excute()
+  # Level5().excute()
+  # Level6().excute()
   print('nothing')
 
 def main():

@@ -5,6 +5,7 @@ class EntitiesManager:
     def __init__(self):
         self.maze = Maze()
         self.pacman = Pacman()
+        self.orangeghost = OrangeGhost()
         self.redGhost = RedGhost()
         #self.ghosts = [BlueGhost, RedGhost, PinkGhost, OrangeGhost]
     
