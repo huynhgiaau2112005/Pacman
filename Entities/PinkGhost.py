@@ -1,13 +1,14 @@
-# # UCS
+# # DFS
 from .Entity import Entity
 from .GhostInterface import GhostInterface
 from Config import Config, Material, Board, Object
+from collections import deque
 
 class PinkGhost(GhostInterface):
     def draw(self):
         realX = Object.realPinkGhostX
         realY = Object.realPinkGhostY
-        Config.screen.blit(Material.pinkGhostImage, (realY, realX))
+        Config.screen.blit(Material.PinkGhostImage, (realY, realX))
 
     def move(self):
         x, y = Object.pinkGhostX, Object.pinkGhostY
@@ -33,12 +34,143 @@ class PinkGhost(GhostInterface):
 
     # Anh em chỉ cần viết thuật toán vào hàm này, các hàm còn lại Âu đã viết 
     def getTargetPos(self, ghost, pacman):
-        print("UCS")
+        # dfs_directions = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
+        # stack = deque([ghost])
+        # visited = set([ghost])
+        # parent = {ghost : None}
+
+        # while stack:
+        #     (ghost_x, ghost_y) = stack.pop()
+
+        #     #Neu gap pacman
+        #     if (ghost_x, ghost_y) == pacman:
+        #         path = [] #list path
+        #         while (ghost_x, ghost_y) != ghost:
+        #             path.append((ghost_x, ghost_y))
+        #             (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
+        #         path = path[::-1]
+        #         for i in path:
+        #             print(i)
+        #         print("\n\n---------------------------------")
+        #         return path[0]
+
+        #     found_next = False  # Biến kiểm tra có tìm được đường đi hợp lệ không
+        #     for x, y in dfs_directions:
+                
+        #         go_x = ghost_x + x
+        #         go_y = ghost_y + y
+
+        #         if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and (go_x, go_y) not in visited:
+        #             if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9:
+        #                 stack.append((go_x, go_y))
+        #                 visited.add((go_x, go_y))
+        #                 parent[(go_x, go_y)] = (ghost_x, ghost_y)
+        #                 found_next = True
+        #                 #break
+        #     # Nếu không tìm được hướng đi hợp lệ nào, quay lui
+        #     if not found_next and parent[(ghost_x, ghost_y)] is not None:
+        #         stack.append(parent[(ghost_x, ghost_y)])
+        # return None
+        ids_direction = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
+        max_depth = 30
+        current_depth = 0
+        
+        while current_depth <= max_depth:
+            stack = deque([(ghost, 0)])
+            visited = set([ghost])
+            parent = {ghost : None}
+
+            #Neu ban dau da o pacman
+            if (ghost) == pacman:
+                return None 
+            while stack:# is not None or count_depth == current_depth:
+                (ghost_x, ghost_y), count_depth = stack.pop()
+
+                if count_depth < current_depth:
+                    for x, y in ids_direction:
+                        go_x = ghost_x + x
+                        go_y = ghost_y + y
+
+                        if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and (go_x, go_y) not in visited:
+                            if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9:
+                                    stack.append(((go_x, go_y), count_depth + 1))
+                                    visited.add((go_x, go_y))
+                                    parent[(go_x, go_y)] = (ghost_x, ghost_y)
+
+                            #Neu gap pacman
+                            if (go_x, go_y) == pacman:      #Early stop
+                                ghost_x, ghost_y = pacman
+                                path = [] #list path
+                                while (ghost_x, ghost_y) != ghost:
+                                    path.append((ghost_x, ghost_y))
+                                    (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
+                                #path.append((ghost_x, ghost_y))
+                                path = path[::-1]
+                                return path[0]                
+            current_depth += 1
+                    
+
+        
     
     def updatePos(self):
         oldX, oldY = Object.pinkGhostX, Object.pinkGhostY
         newPos = self.getTargetPos((oldX, oldY), (Object.pacmanX, Object.pacmanY))
+        # print("Gia tri lay ra: ", end="")
+        # print(newPos, end='\n\n=======================')
         
+        if newPos:
+            newX, newY = newPos
+
+            Board.coordinates[oldX][oldY] = Board.BLANK
+            Board.coordinates[newX][newY] = Board.PINK_GHOST
+
+            Object.pinkGhostX = newX
+            Object.pinkGhostY = newY
+
+    def pinkGhostForLv2(self, ghost, pacman):
+        dfs_directions = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
+        stack = deque([ghost])
+        visited = set([ghost])
+        parent = {ghost : None}
+
+        while stack:
+            (ghost_x, ghost_y) = stack.pop()
+
+            #Neu gap pacman
+            if (ghost_x, ghost_y) == pacman:
+                path = [] #list path
+                while (ghost_x, ghost_y) != ghost:
+                    path.append((ghost_x, ghost_y))
+                    (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
+                path = path[::-1]
+                #for i in path:
+                #    print(i)
+               # print("\n\n---------------------------------")
+                return path
+
+            found_next = False  # Biến kiểm tra có tìm được đường đi hợp lệ không
+            for x, y in dfs_directions:
+                
+                go_x = ghost_x + x
+                go_y = ghost_y + y
+
+                if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and (go_x, go_y) not in visited:
+                    if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9:
+                        stack.append((go_x, go_y))
+                        visited.add((go_x, go_y))
+                        parent[(go_x, go_y)] = (ghost_x, ghost_y)
+                        found_next = True
+                        break
+            # Nếu không tìm được hướng đi hợp lệ nào, quay lui
+            if not found_next and parent[(ghost_x, ghost_y)] is not None:
+                stack.append(parent[(ghost_x, ghost_y)])
+        return None
+    def updatePosForLv2(self, newPos):
+        oldX, oldY = Object.pinkGhostX, Object.pinkGhostY
+        #print("Gia tri lay ra: ", end="")
+        #print(newPos, end='\n\n=======================')
+    
+
         if newPos:
             newX, newY = newPos
 
