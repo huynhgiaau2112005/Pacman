@@ -131,3 +131,20 @@ def setup():
   Object.realOrangeGhostX = Object.orangeGhostX * Config.p_height + Config.p_height * 0.5 - Object.ORANGE_GHOST_SIZE * 0.5 
   Object.realOrangeGhostY = Object.orangeGhostY * Config.p_width + Config.p_width * 0.5 - Object.ORANGE_GHOST_SIZE * 0.5
   
+class Sounds:
+  pacman_eat_dot_sound = pygame.mixer.Sound("Assets/sounds/pacman_eating_dots.mp3")  # Âm thanh khi ăn
+  ghost_move_sound = pygame.mixer.Sound("Assets/sounds/ghost_move.mp3")  # Âm thanh ma di chuyển
+  pacman_death_sound = pygame.mixer.Sound("Assets/sounds/pacman_death.wav")
+  beginning_game_sound = pygame.mixer.Sound("Assets/sounds/pacman_beginning.wav")
+
+  def beginning_game(self):
+    self.beginning_game_sound.play()
+
+  def pacman_eat_dot(self):
+    self.pacman_eat_dot_sound.play()
+
+  def pacman_death(self):
+    self.pacman_death_sound.play()
+  
+  def ghost_move(self):
+    self.ghost_move_sound.play()
