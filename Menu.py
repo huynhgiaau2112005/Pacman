@@ -32,8 +32,6 @@ LIGHT_RED = (255, 50, 50)
 BLACK = (0, 0, 0)
 LIGHT_GREEN = (144, 238, 144)  # Màu xanh nhạt (Light Green)
 
-font = pygame.font.Font(None, 36)
-
 class Menu:
   def drawBackground(self):
     background = pygame.image.load(backgroundPath)
@@ -54,11 +52,16 @@ class Menu:
         color = LIGHT_GREEN
         default_color = WHITE
 
+        text_size = 36
+
         # Kiểm tra chuột có hover vào nút Level không
         if x <= mouse_x <= x + width and y <= mouse_y <= y + height:
-          pygame.draw.rect(Config.screen, LIGHT_GREEN, (x, y, width, height), border_radius=15)
+          pygame.draw.rect(Config.screen, LIGHT_GREEN, (x - 2.5, y - 2.5, width + 5, height + 5), border_radius=15)
+          text_size = 40
         else:
           pygame.draw.rect(Config.screen, default_color, (x, y, width, height), border_radius=15)
+
+        font = pygame.font.Font(None, text_size)
 
         # Hiển thị text trên nút
         text_surface = font.render(text, True, BLACK)
@@ -74,6 +77,8 @@ class Menu:
       pygame.draw.rect(Config.screen, LIGHT_RED, (exitButtonX, exitButtonY, exitButtonWidth, exitButtonHeight), border_radius=15)
     else:
       pygame.draw.rect(Config.screen, RED, (exitButtonX, exitButtonY, exitButtonWidth, exitButtonHeight), border_radius=15)
+
+    font = pygame.font.Font(None, 36)
 
     # Hiển thị văn bản trên nút Exit
     text = "Exit"
@@ -98,7 +103,7 @@ class Menu:
         if event.type == pygame.QUIT:
             Config.running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            # Nếu click vào nút Level
+            # Nếu click vào nút Levels
             for x, y, width, height, text, level in buttons:
               if x <= mouse_x <= x + width and y <= mouse_y <= y + height:
                 level.execute()

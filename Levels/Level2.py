@@ -7,7 +7,11 @@ class Level2:
     def __init__(self):
         pass
 
+    def setup(self):
+        print("setup")
+
     def execute(self):
+        self.setup()
         clock = pygame.time.Clock()
 
         countFrames = 0 # 0

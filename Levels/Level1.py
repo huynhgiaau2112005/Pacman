@@ -6,7 +6,12 @@ class Level1:
     def __init__(self):
         pass
 
+    def setup(self):
+        print("setup")
+
     def execute(self):
+        self.setup()
+        
         clock = pygame.time.Clock()
 
         while Config.running:

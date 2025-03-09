@@ -1,12 +1,20 @@
+from Entities.Entity import Entity
 from EntitiesManager import EntitiesManager as EM
-from Config import Config
+from Config import Config, Object
 import pygame
 
 class Level4:
   def __init__(self):
     pass
 
+  def setup(self):
+    Object.redGhostX = 15
+    Object.redGhostY = 15
+    (Object.realRedGhostX, Object.realRedGhostY) = Entity.getRealCoordinates((Object.redGhostX, Object.redGhostY), Object.RED_GHOST_SIZE)
+
   def execute(self):
+    self.setup()
+
     clock = pygame.time.Clock()
 
     countFrames = 0
