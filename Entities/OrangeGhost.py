@@ -42,7 +42,7 @@ class OrangeGhost(GhostInterface):
         (ghostX, ghostY) = ghost
         f = 0
         heap = [(f, ghostX, ghostY, [])]
-        visited = set([(ghostX, ghostY)])
+        visited = set([])
         
         DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         PATH_LIMIT = 100
@@ -50,8 +50,9 @@ class OrangeGhost(GhostInterface):
         while heap:
             
             (f, x, y, path) = heapq.heappop(heap)
-    
-            if Board.coordinates[x][y] == Board.PACMAN or len(path) == PATH_LIMIT:
+            visited.add((x, y))
+            
+            if Board.coordinates[int(x)][int(y)] == Board.PACMAN or len(path) == PATH_LIMIT:
                 return path[0]
             
             for dx, dy in DIRECTIONS:
@@ -62,9 +63,11 @@ class OrangeGhost(GhostInterface):
                     nx += dx
                     ny += dy
                 
+                if (nx, ny) == (Object.pacmanX, Object.pacmanY):
+                        return path[0]
+                    
                 if (nx, ny) not in visited and self.isValidPos(nx, ny):
-                    visited.add((nx, ny))
-                    heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + [(nx, ny)]))
+                    heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + (nx, ny)))
                 
         return None
     
@@ -72,7 +75,7 @@ class OrangeGhost(GhostInterface):
         (ghostX, ghostY) = ghost
         f = 0
         heap = [(f, ghostX, ghostY, [])]
-        visited = set([(ghostX, ghostY)])
+        visited = set([])
         
         DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         PATH_LIMIT = 100
@@ -80,10 +83,10 @@ class OrangeGhost(GhostInterface):
         while heap:
             
             (f, x, y, path) = heapq.heappop(heap)
-    
-            if Board.coordinates[x][y] == Board.PACMAN or len(path) == PATH_LIMIT:
-                return path, len(visited)
+            visited.add((x, y))
             
+            if Board.coordinates[int(x)][int(y)] == Board.PACMAN or len(path) == PATH_LIMIT:
+                return path, len(visited)    
             
             for dx, dy in DIRECTIONS:
                 
@@ -94,14 +97,12 @@ class OrangeGhost(GhostInterface):
                 while self.isValidPos(nx, ny) and (nx, ny) not in Board.nodes and (nx, ny) != (Object.pacmanX, Object.pacmanY):
                     nx += dx
                     ny += dy
-                    subpath.append((nx, ny))
-                    
+                    subpath.append((nx, ny))          
                 
-                if (nx, ny) not in visited and self.isValidPos(nx, ny):
-                    if (nx, ny) == (Object.pacmanX, Object.pacmanY):
-                        return path + subpath, len(visited)
+                if (nx, ny) == (Object.pacmanX, Object.pacmanY):
+                    return path + subpath, len(visited)
                     
-                    visited.add((nx, ny))
+                if (nx, ny) not in visited and self.isValidPos(nx, ny):
                     heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + subpath))
                 
         return None, len(visited)

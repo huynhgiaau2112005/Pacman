@@ -16,7 +16,6 @@ class Level3:
     clock = pygame.time.Clock()
     path, numberofExpandnodes = EM().orangeghost.getTargetPathInformation((Object.orangeGhostX, Object.orangeGhostY), (Object.pacmanX, Object.pacmanY))
     node = 0 
-    print(path, numberofExpandnodes)
     countFrames = 0
     while Config.running:
       
