@@ -16,9 +16,11 @@ class Level4:
     self.setup()
 
     clock = pygame.time.Clock()
+    path, numOfExpendedNodes = EM().redGhost.getTargetPathInformation((Object.redGhostX, Object.redGhostY), (Object.pacmanX, Object.pacmanY))
+    step = 0
 
-    #print(EM().redGhost.getTargetPathInformation((Object.redGhostX, Object.redGhostY), (Object.pacmanX, Object.pacmanY)))
     countFrames = 0
+
     while Config.running:
 
       Config.screen.fill('black')
@@ -33,8 +35,24 @@ class Level4:
           if event.key == pygame.K_ESCAPE:
             return
       
+      targetX, targetY = path[step]
+      curX, curY = Object.redGhostX, Object.redGhostY
+
       if countFrames % 15 == 0:
-        EM().redGhost.updatePos()
+        if (curX, curY) == (targetX, targetY):
+          if step < len(path) - 1:
+            step += 1
+            targetX, targetY = path[step]
+
+        if (curX, curY) != (targetX, targetY):
+          newX, newY = curX, curY
+          if targetX != curX:
+            newX += (targetX - curX) // abs(targetX - curX) 
+          if targetY != curY:
+            newY += (targetY - curY) // abs(targetY - curY)
+          Object.redGhostX = newX
+          Object.redGhostY = newY
+          
       
       EM().redGhost.move()
 
