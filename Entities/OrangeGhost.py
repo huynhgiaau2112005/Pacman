@@ -98,8 +98,9 @@ class OrangeGhost(GhostInterface):
                     
                 
                 if (nx, ny) not in visited and self.isValidPos(nx, ny):
-                    print(nx, ny)
-                    print(f + abs(nx - x) + abs(ny - y))
+                    if (nx, ny) == (Object.pacmanX, Object.pacmanY):
+                        return path + subpath, len(visited)
+                    
                     visited.add((nx, ny))
                     heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + subpath))
                 
