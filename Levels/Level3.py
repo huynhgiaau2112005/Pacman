@@ -1,5 +1,5 @@
 from EntitiesManager import EntitiesManager as EM
-from Config import Config
+from Config import Config, Object
 import pygame
 
 class Level3:
@@ -13,7 +13,6 @@ class Level3:
     self.setup()
     
     clock = pygame.time.Clock()
-    
     countFrames = 0
     while Config.running:
       
@@ -28,9 +27,28 @@ class Level3:
             Config.running = False
           if event.key == pygame.K_ESCAPE:
             return
-            
+           
+      path = EM().orangeghost.getTargetPathInformation((Object.orangeGhostX, Object.orangeGhostY), (Object.pacmanX, Object.pacmanY))
+      node = 0 
+      oldX, oldY = Object.orangeGhostX, Object.orangeGhostY
+      
       if countFrames % 15 == 0:
-        EM().orangeghost.updatePos()
+        
+        if (node >= len(path)):
+          continue
+        
+        moveX, moveY = path[node]
+        node += 1
+        
+        if (oldX, oldY) != (moveX, moveY):
+            newX, newY = oldX, oldY
+            if moveX != oldX:
+                newX += 1 if moveX > oldX else -1 
+            if moveY != oldY:
+                newY += 1 if moveY > oldY else -1 
+        
+            Object.orangeGhostX = newX
+            Object.orangeGhostY = newY
       
       EM().orangeghost.move()
 
