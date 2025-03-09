@@ -21,6 +21,8 @@ class Level4:
           if event.key == pygame.K_q:
             print("Phím Q được ấn")
             Config.running = False
+          if event.key == pygame.K_ESCAPE:
+            return
       
       if countFrames % 15 == 0:
         EM().redGhost.updatePos()

@@ -71,43 +71,49 @@ class PinkGhost(GhostInterface):
         #     if not found_next and parent[(ghost_x, ghost_y)] is not None:
         #         stack.append(parent[(ghost_x, ghost_y)])
         # return None
-        ids_direction = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
-        max_depth = 30
-        current_depth = 0
         
-        while current_depth <= max_depth:
-            stack = deque([(ghost, 0)])
+        #Neu ban dau da o pacman
+        if (ghost) == pacman:
+            return None 
+            
+        ids_direction = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
+        max_depth_limit = 100
+        depth_limit = 1
+        while depth_limit <= max_depth_limit:
+            stack = deque([(ghost)])
             visited = set([ghost])
+            depths = {ghost: 0}  
             parent = {ghost : None}
 
-            #Neu ban dau da o pacman
-            if (ghost) == pacman:
-                return None 
-            while stack:# is not None or count_depth == current_depth:
-                (ghost_x, ghost_y), count_depth = stack.pop()
+            while stack:# is not None or count_depth == depth_limit:
+                (ghost_x, ghost_y) = stack.pop()
+                depth = depths[(ghost_x, ghost_y)]
+                #print((depth_limit, (ghost_x, ghost_y), depth))
 
-                if count_depth < current_depth:
+                if depth < depth_limit:
                     for x, y in ids_direction:
                         go_x = ghost_x + x
                         go_y = ghost_y + y
 
-                        if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and (go_x, go_y) not in visited:
+                        if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and ((go_x, go_y) not in visited or depth + 1 < depths[(go_x, go_y)]):
                             if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9:
-                                    stack.append(((go_x, go_y), count_depth + 1))
-                                    visited.add((go_x, go_y))
-                                    parent[(go_x, go_y)] = (ghost_x, ghost_y)
+                                stack.append((go_x, go_y))
+                                visited.add((go_x, go_y))
+                                depths[(go_x, go_y)] = depth + 1
+                                parent[(go_x, go_y)] = (ghost_x, ghost_y)
 
-                            #Neu gap pacman
-                            if (go_x, go_y) == pacman:      #Early stop
-                                ghost_x, ghost_y = pacman
-                                path = [] #list path
-                                while (ghost_x, ghost_y) != ghost:
-                                    path.append((ghost_x, ghost_y))
-                                    (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                                #path.append((ghost_x, ghost_y))
-                                path = path[::-1]
-                                return path[0]                
-            current_depth += 1
+                                #Neu gap pacman
+                                if (go_x, go_y) == pacman:      #Early stop
+                                    ghost_x, ghost_y = pacman
+                                    path = [] #list path
+                                    while (ghost_x, ghost_y) != ghost:
+                                        path.append((ghost_x, ghost_y))
+                                        (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
+                                    #path.append((ghost_x, ghost_y))
+                                    path = path[::-1]
+                                    return path[0]    
+                else: visited.discard((ghost_x, ghost_y))
+            depth_limit += 1
                     
 
         
@@ -117,7 +123,7 @@ class PinkGhost(GhostInterface):
         newPos = self.getTargetPos((oldX, oldY), (Object.pacmanX, Object.pacmanY))
         # print("Gia tri lay ra: ", end="")
         # print(newPos, end='\n\n=======================')
-        
+
         if newPos:
             newX, newY = newPos
 

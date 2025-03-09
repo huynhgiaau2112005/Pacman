@@ -10,6 +10,7 @@ class Level1:
         clock = pygame.time.Clock()
 
         while Config.running:
+            Config.screen.fill('black')
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     Config.running = False
@@ -17,6 +18,8 @@ class Level1:
                     if event.key == pygame.K_q:
                         print("Phím Q được ấn")
                         Config.running = False
+                    if event.key == pygame.K_ESCAPE:
+                        return
             EM().maze.draw()
             EM().pacman.draw()
             pygame.display.flip()

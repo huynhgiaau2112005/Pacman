@@ -15,12 +15,14 @@ class Level3:
       Config.screen.fill('black')
       
       for event in pygame.event.get():
-        if event.type == pygame.quit:
+        if event.type == pygame.QUIT:
           Config.running = False
         elif event.type == pygame.KEYDOWN:
           if event.key == pygame.K_q:
             print("Phím Q được ấn")
             Config.running = False
+          if event.key == pygame.K_ESCAPE:
+            return
             
       if countFrames % 15 == 0:
         EM().orangeghost.updatePos()

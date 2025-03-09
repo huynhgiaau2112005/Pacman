@@ -1,17 +1,20 @@
 from Levels import *
-import Config
+from Config import Config, setup
+from Menu import Menu
 import pygame
 
 def mainBusiness():
-  Config.setup()
+  setup()
   pygame.init()
   # Level4().execute()
   # Level3().execute()
-  # Level2().excute()
+  # Level2().execute()
   # Level4().excute()
   # Level5().excute()
   # Level6().excute()
-  print('nothing')
+  menu = Menu()
+  menu.execute()
+  print('nothing')  
 
 def main():
   mainBusiness()

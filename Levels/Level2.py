@@ -13,10 +13,11 @@ class Level2:
         countFrames = 0 # 0
         #listPos = deque(EM().pinkGhost.pinkGhostForLv2((Object.pinkGhostX, Object.pinkGhostY), (Object.pacmanX, Object.pacmanY)))
 
-
+        # path, depth = EM().pinkGhost.getTargetPos((Object.pinkGhostX, Object.pinkGhostY), (Object.pacmanX, Object.pacmanY))
+        # index = 0
         while Config.running:
 
-            #Config.screen.fill('black')
+            Config.screen.fill('black')
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -25,13 +26,19 @@ class Level2:
                     if event.key == pygame.K_q:
                         print("Phím Q được ấn")
                         Config.running = False
+                    if event.key == pygame.K_ESCAPE:
+                        return
             
             if countFrames % 15 == 0:
                 # if listPos:
                 #     newPos = listPos.popleft()
                 #     EM().pinkGhost.updatePosForLv2(newPos)
                 EM().pinkGhost.updatePos()
-            
+                #print((Object.pinkGhostX, Object.pinkGhostY))
+                # if index < len(path):
+                #     (Object.pinkGhostX, Object.pinkGhostY) = path[index]
+                #     index += 1
+                #     print((index, depth))
             EM().pinkGhost.move()
 
             EM().maze.draw()

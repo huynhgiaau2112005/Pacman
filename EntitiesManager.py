@@ -7,6 +7,7 @@ class EntitiesManager:
         self.pacman = Pacman()
         self.orangeghost = OrangeGhost()
         self.redGhost = RedGhost()
+        self.pinkGhost = PinkGhost()
         #self.ghosts = [BlueGhost, RedGhost, PinkGhost, OrangeGhost]
     
     def reset(self):
