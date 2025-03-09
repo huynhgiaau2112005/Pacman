@@ -1,4 +1,5 @@
 from EntitiesManager import EntitiesManager as EM
+from Entities.Entity import Entity
 from Config import Config, Object
 import pygame
 
@@ -13,6 +14,8 @@ class Level3:
     self.setup()
     
     clock = pygame.time.Clock()
+    path, numberofExpandnodes = EM().orangeghost.getTargetPathInformation((Object.orangeGhostX, Object.orangeGhostY), (Object.pacmanX, Object.pacmanY))
+    node = 0 
     countFrames = 0
     while Config.running:
       
@@ -27,11 +30,8 @@ class Level3:
             Config.running = False
           if event.key == pygame.K_ESCAPE:
             return
-           
-      path = EM().orangeghost.getTargetPathInformation((Object.orangeGhostX, Object.orangeGhostY), (Object.pacmanX, Object.pacmanY))
-      node = 0 
-      oldX, oldY = Object.orangeGhostX, Object.orangeGhostY
       
+      oldX, oldY = Object.orangeGhostX, Object.orangeGhostY
       if countFrames % 15 == 0:
         
         if (node >= len(path)):
