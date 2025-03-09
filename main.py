@@ -1,5 +1,5 @@
 from Levels import *
-from Config import Config, setup
+from Config import setup
 from Menu import Menu
 import pygame
 
@@ -9,9 +9,9 @@ def mainBusiness():
   # Level4().execute()
   # Level3().execute()
   # Level2().execute()
-  # Level4().excute()
-  # Level5().excute()
-  # Level6().excute()
+  # Level4().execute()
+  # Level5().execute()
+  # Level6().execute()
   menu = Menu()
   menu.execute()
   print('nothing')  

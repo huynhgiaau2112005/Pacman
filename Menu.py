@@ -1,5 +1,5 @@
 from Levels import *
-from Config import Config, setup
+from Config import Config
 import pygame
 
 backgroundPath = "Assets/background_menu.jpg"
@@ -15,20 +15,13 @@ buttonX = (Config.width - buttonWidth) / 2
 exitButtonX = (Config.width - exitButtonWidth) / 2
 exitButtonY = 650
 
-level1 = Level1()
-level2 = Level2()
-level3 = Level3()
-level4 = Level4()
-level5 = Level5()
-level6 = Level6()
-
 buttons = [
-    (buttonX - 100, 300, buttonWidth - 100, buttonHeight, "BFS", level1),
-    (buttonX - 100, 370, buttonWidth - 100, buttonHeight, "DFS", level2),
-    (buttonX + 200, 300, buttonWidth - 100, buttonHeight, "UCS", level3),
-    (buttonX + 200, 370, buttonWidth - 100, buttonHeight, "A*", level4),
-    (buttonX, 480, buttonWidth, buttonHeight, "Parallel Execution", level5),
-    (buttonX, 550, buttonWidth, buttonHeight, "Play", level6),
+    (buttonX - 100, 300, buttonWidth - 100, buttonHeight, "BFS", Level1()),
+    (buttonX - 100, 370, buttonWidth - 100, buttonHeight, "DFS", Level2()),
+    (buttonX + 200, 300, buttonWidth - 100, buttonHeight, "UCS", Level3()),
+    (buttonX + 200, 370, buttonWidth - 100, buttonHeight, "A*", Level4()),
+    (buttonX, 480, buttonWidth, buttonHeight, "Parallel Execution", Level5()),
+    (buttonX, 550, buttonWidth, buttonHeight, "Play", Level6()),
 ]
 
 WHITE = (255, 255, 255)
