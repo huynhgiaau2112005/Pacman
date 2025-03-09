@@ -15,7 +15,6 @@ def mainBusiness():
   menu = Menu()
   menu.execute()
   print('nothing')  
-
 def main():
   mainBusiness()
 

@@ -12,11 +12,11 @@ class Config:
   fps = 60 #600
 
 class Object:
-  PACMAN_SIZE = 42
-  BLUE_GHOST_SIZE = 42
-  PINK_GHOST_SIZE = 42
-  RED_GHOST_SIZE = 42
-  ORANGE_GHOST_SIZE = 42
+  PACMAN_SIZE = 35
+  BLUE_GHOST_SIZE = 35
+  PINK_GHOST_SIZE = 35
+  RED_GHOST_SIZE = 35
+  ORANGE_GHOST_SIZE = 35
 
   pacmanX = 24
   pacmanY = 14

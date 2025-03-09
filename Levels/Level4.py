@@ -17,6 +17,7 @@ class Level4:
 
     clock = pygame.time.Clock()
 
+    #print(EM().redGhost.getTargetPathInformation((Object.redGhostX, Object.redGhostY), (Object.pacmanX, Object.pacmanY)))
     countFrames = 0
     while Config.running:
 
