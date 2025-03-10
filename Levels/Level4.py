@@ -23,10 +23,25 @@ class Level4:
   def setup(self):
     #(Object.pinkGhostX, Object.pinkGhostY) = (16, 13) #(6, 2) (30, 27) (27, 3) (21, 3)
     #(Object.pacmanX, Object.pacmanY) = (24, 14) #(24, 26) (4, 2) (29, 27) (15, 21)
-    Object.redGhostX = 15
-    Object.redGhostY = 15
+
+    # Setup tọa độ ma trận
+    Object.redGhostX = 21
+    Object.redGhostY = 3
+    Object.pacmanX = 15
+    Object.pacmanY = 21
+
+    # Setup tọa độ thực
+    (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
     (Object.realRedGhostX, Object.realRedGhostY) = Entity.getRealCoordinates((Object.redGhostX, Object.redGhostY), Object.RED_GHOST_SIZE)
 
+    # Setup ma trận Coordinates 
+    Board.coordinates[Object.redGhostX][Object.redGhostY] = Board.RED_GHOST
+    Board.coordinates[Object.pacmanX][Object.pacmanY] = Board.PACMAN 
+
+    for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, RedGhost trong ma trận Coordinates, các giá trị còn lại bỏ
+      for j in range (len(Board.coordinates[0])):
+        if Board.coordinates[i][j] not in (Board.PACMAN, Board.RED_GHOST):
+          Board.coordinates[i][j] = Board.BLANK
   def execute(self):
     self.setup()
     Sounds.ghost_move_sound.play(loops=-1)
