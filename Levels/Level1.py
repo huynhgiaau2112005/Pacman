@@ -15,14 +15,35 @@ boxY = 150
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+# 5 bo
+# testcase = 3
+
 class Level1:
     def __init__(self):
         pass
 
     def setup(self):
-        #(Object.pinkGhostX, Object.pinkGhostY) = (16, 13) #(6, 2) (30, 27) (27, 3) (21, 3)
+        #(Object.blueGhostX, Object.blueGhostY) = (16, 13) #(6, 2) (30, 27) (27, 3) (21, 3)
         #(Object.pacmanX, Object.pacmanY) = (24, 14) #(24, 26) (4, 2) (29, 27) (15, 21)
-        print("setup")
+        
+         # Setup tọa độ ma trận
+        Object.blueGhostX = 6
+        Object.blueGhostY = 2
+        Object.pacmanX = 24
+        Object.pacmanY = 26
+
+        # Setup tọa độ thực
+        (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
+        (Object.realBlueGhostX, Object.realBlueGhostY) = Entity.getRealCoordinates((Object.blueGhostX, Object.blueGhostY), Object.BLUE_GHOST_SIZE)
+
+        # Setup ma trận Coordinates 
+        Board.coordinates[Object.blueGhostX][Object.blueGhostY] = Board.BLUE_GHOST
+        Board.coordinates[Object.pacmanX][Object.pacmanY] = Board.PACMAN 
+
+        for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, BlueGhost trong ma trận Coordinates, các giá trị còn lại bỏ
+            for j in range (len(Board.coordinates[0])):
+                if Board.coordinates[i][j] not in (Board.PACMAN, Board.BLUE_GHOST):
+                    Board.coordinates[i][j] = Board.BLANK
 
     def execute(self):
         self.setup()
