@@ -37,7 +37,7 @@ class Level2:
         Board.coordinates[Object.pinkGhostX][Object.pinkGhostY] = Board.PINK_GHOST
         Board.coordinates[Object.pacmanX][Object.pacmanY] = Board.PACMAN 
 
-        for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, RedGhost trong ma trận Coordinates, các giá trị còn lại bỏ
+        for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, PinkGhost trong ma trận Coordinates, các giá trị còn lại bỏ
             for j in range (len(Board.coordinates[0])):
                 if Board.coordinates[i][j] not in (Board.PACMAN, Board.PINK_GHOST):
                     Board.coordinates[i][j] = Board.BLANK
