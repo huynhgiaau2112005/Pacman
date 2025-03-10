@@ -22,7 +22,25 @@ class Level2:
     def setup(self):
         #(Object.pinkGhostX, Object.pinkGhostY) = (16, 13) #(6, 2) (30, 27) (27, 3) (21, 3)
         #(Object.pacmanX, Object.pacmanY) = (24, 14) #(24, 26) (4, 2) (29, 27) (15, 21)
-        print("")
+        
+        # Setup tọa độ ma trận
+        Object.pinkGhostX = 6
+        Object.pinkGhostY = 2
+        Object.pacmanX = 24
+        Object.pacmanY = 26
+
+        # Setup tọa độ thực
+        (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
+        (Object.realPinkGhostX, Object.realPinkGhostY) = Entity.getRealCoordinates((Object.pinkGhostX, Object.pinkGhostY), Object.PINK_GHOST_SIZE)
+
+        # Setup ma trận Coordinates 
+        Board.coordinates[Object.pinkGhostX][Object.pinkGhostY] = Board.PINK_GHOST
+        Board.coordinates[Object.pacmanX][Object.pacmanY] = Board.PACMAN 
+
+        for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, RedGhost trong ma trận Coordinates, các giá trị còn lại bỏ
+            for j in range (len(Board.coordinates[0])):
+                if Board.coordinates[i][j] not in (Board.PACMAN, Board.PINK_GHOST):
+                    Board.coordinates[i][j] = Board.BLANK
 
     def execute(self):
 
