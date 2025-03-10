@@ -1,6 +1,6 @@
 from Entities.Entity import Entity
 from EntitiesManager import EntitiesManager as EM
-from Config import Config, Object, Sounds
+from Config import Config, Object, Sounds, Board
 import pygame
 import time
 import psutil #de lay bo nho

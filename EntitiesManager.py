@@ -8,6 +8,7 @@ class EntitiesManager:
         self.orangeghost = OrangeGhost()
         self.redGhost = RedGhost()
         self.pinkGhost = PinkGhost()
+        self.blueGhost = BlueGhost()
         #self.ghosts = [BlueGhost, RedGhost, PinkGhost, OrangeGhost]
     
     def reset(self):

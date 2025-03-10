@@ -1,6 +1,7 @@
 from EntitiesManager import EntitiesManager as EM
-from Config import Config, Sounds, Object
+from Config import Config, Sounds, Object, Board
 from collections import deque
+from Entities.Entity import Entity
 import time
 import psutil #de lay bo nho
 import os
