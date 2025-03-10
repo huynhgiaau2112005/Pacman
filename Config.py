@@ -1,5 +1,7 @@
 import pygame
 
+pygame.mixer.init()
+
 class Config:
   flicker = False
   running = True
