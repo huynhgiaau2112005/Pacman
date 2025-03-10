@@ -134,6 +134,7 @@ def setup():
   Object.realOrangeGhostY = Object.orangeGhostY * Config.p_width + Config.p_width * 0.5 - Object.ORANGE_GHOST_SIZE * 0.5
 
 class Sounds:
+  dramatic_theme_music_sound = pygame.mixer.Sound("Assets/sounds/dramatic_theme_music.mp3")  # Âm thanh nhạc nền trong game
   pacman_eat_dot_sound = pygame.mixer.Sound("Assets/sounds/pacman_eating_dots.mp3")  # Âm thanh khi ăn
   ghost_move_sound = pygame.mixer.Sound("Assets/sounds/ghost_move.mp3")  # Âm thanh ma di chuyển
   pacman_death_sound = pygame.mixer.Sound("Assets/sounds/pacman_death.wav")
@@ -150,3 +151,6 @@ class Sounds:
   
   def ghost_move(self):
     self.ghost_move_sound.play()
+
+  def dramatic_theme_music(self):
+    self.dramatic_theme_music_sound.play().set_volume(0.1)
