@@ -39,6 +39,9 @@ class OrangeGhost(GhostInterface):
         return False
     # Anh em chỉ cần viết thuật toán vào hàm này, các hàm còn lại Âu đã viết 
     def getTargetPos(self, ghost, pacman):
+        if ghost == pacman:
+            return None
+
         (ghostX, ghostY) = ghost
         f = 0
         heap = [(f, ghostX, ghostY, [])]
@@ -64,14 +67,20 @@ class OrangeGhost(GhostInterface):
                     ny += dy
                 
                 if (nx, ny) == (Object.pacmanX, Object.pacmanY):
-                        return path[0]
+                    return path[0]
                     
-                if (nx, ny) not in visited and self.isValidPos(nx, ny):
-                    heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + (nx, ny)))
+                if (nx, ny) not in visited and self.isValidPos(nx, ny)\
+                    and Board.coordinates[nx][ny] != Board.PINK_GHOST \
+                    and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
+                    and Board.coordinates[nx][ny] != Board.RED_GHOST: #check collision:
+                    heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + [(nx, ny)]))
                 
         return None
     
     def getTargetPathInformation(self, ghost, pacman):
+        if ghost == pacman:
+            return None, 0
+        
         (ghostX, ghostY) = ghost
         f = 0
         heap = [(f, ghostX, ghostY, [])]

@@ -4,7 +4,7 @@ from Config import Config, Object, Sounds, Board
 from Levels.ExperimentBox import ExperimentBox
 import pygame
 import time
-import psutil #de lay bo nho
+import tracemalloc #de lay bo nho
 import math
 import os
 
@@ -39,7 +39,7 @@ class Level4:
 
     for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, RedGhost trong ma trận Coordinates, các giá trị còn lại bỏ
       for j in range (len(Board.coordinates[0])):
-        if Board.coordinates[i][j] not in (Board.PACMAN, Board.RED_GHOST):
+        if (i, j) not in ((Object.redGhostX, Object.redGhostY), (Object.pacmanX, Object.pacmanY)):
           Board.coordinates[i][j] = Board.BLANK
   
   def get_volume(self, ghost_x, ghost_y, pac_x, pac_y, max_distance=15):
@@ -55,22 +55,25 @@ class Level4:
 
     while Config.running and not quit:
       self.setup()
+      for i in range(len(Board.coordinates)):
+          print(Board.coordinates[i])
 
       Sounds().dramatic_theme_music()
       ghost_move_sound = pygame.mixer.Sound("Assets/sounds/ghost_move.mp3")
 
       clock = pygame.time.Clock()
 
-      # Lấy bộ nhớ trước
-      process = psutil.Process(os.getpid())
-      before_mem = process.memory_info().rss / (1024 * 1024)  # MB
+      # Bắt đầu đo bộ nhớ
+      tracemalloc.start()
 
       start_time = time.time()  # Lấy thời gian bắt đầu
       path, numOfExpendedNodes = EM().redGhost.getTargetPathInformation((Object.redGhostX, Object.redGhostY), (Object.pacmanX, Object.pacmanY))
       end_time = time.time()    # Lấy thời gian kết thúc
 
-      # Lấy bộ nhớ sau
-      after_mem = process.memory_info().rss / (1024 * 1024)  # MB
+      # Lấy kết quả peak memory usage
+      current, peak = tracemalloc.get_traced_memory()
+      # Dừng đo
+      tracemalloc.stop()
       
       step = 0
       countFrames = 0
@@ -143,9 +146,9 @@ class Level4:
 
       start = False
 
-      algorithm = "BFS"
+      algorithm = "A*"
       search_time = end_time - start_time
-      memory_usage = after_mem - before_mem
+      memory_usage = peak / (2 ** 20)
       num_expanded_nodes = numOfExpendedNodes
           
       while Config.running:

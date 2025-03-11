@@ -4,7 +4,7 @@ from collections import deque
 from Entities.Entity import Entity
 from Levels.ExperimentBox import ExperimentBox
 import time
-import psutil #de lay bo nho
+import tracemalloc #de lay bo nho
 import os
 import pygame
 import math
@@ -40,7 +40,7 @@ class Level1:
 
         for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, BlueGhost trong ma trận Coordinates, các giá trị còn lại bỏ
             for j in range (len(Board.coordinates[0])):
-                if Board.coordinates[i][j] not in (Board.PACMAN, Board.BLUE_GHOST):
+                if (i, j) not in ((Object.blueGhostX, Object.blueGhostY), (Object.pacmanX, Object.pacmanY)):
                     Board.coordinates[i][j] = Board.BLANK
 
     def get_volume(self, ghost_x, ghost_y, pac_x, pac_y, max_distance=15):
@@ -63,16 +63,17 @@ class Level1:
             clock = pygame.time.Clock()
             countFrames = 0
 
-            # Lấy bộ nhớ trước
-            process = psutil.Process(os.getpid())
-            before_mem = process.memory_info().rss / (1024 * 1024)  # MB
+            # Bắt đầu đo bộ nhớ
+            tracemalloc.start()
 
             start_time = time.time()  # Lấy thời gian bắt đầu
             listPos, expanded_nodes = EM().blueGhost.getTargetPathInformation((Object.blueGhostX, Object.blueGhostY), (Object.pacmanX, Object.pacmanY))   # Chạy thuật toán
             end_time = time.time()    # Lấy thời gian kết thúc
 
-            # Lấy bộ nhớ sau
-            after_mem = process.memory_info().rss / (1024 * 1024)  # MB
+            # Lấy kết quả peak memory usage
+            current, peak = tracemalloc.get_traced_memory()
+            # Dừng đo
+            tracemalloc.stop()
 
             listPos = deque(listPos)
 
@@ -141,7 +142,7 @@ class Level1:
 
             algorithm = "BFS"
             search_time = end_time - start_time
-            memory_usage = after_mem - before_mem
+            memory_usage = peak / (2 ** 20)
             num_expanded_nodes = expanded_nodes
                 
             while Config.running:

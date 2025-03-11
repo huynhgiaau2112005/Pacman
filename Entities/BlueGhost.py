@@ -59,7 +59,10 @@ class BlueGhost(GhostInterface):
                 go_x = ghost_x + x
                 go_y = ghost_y + y
                 if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS:
-                    if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9) and (go_x, go_y) not in visited:
+                    if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9) and (go_x, go_y) not in visited\
+                        and Board.coordinates[go_x][go_y] != Board.PINK_GHOST \
+                        and Board.coordinates[go_x][go_y] != Board.ORANGE_GHOST \
+                        and Board.coordinates[go_x][go_y] != Board.RED_GHOST: #check collision::
                         queue.append((go_x, go_y))
                         visited.add((go_x, go_y))
                         parent[(go_x, go_y)] = (ghost_x, ghost_y)                        

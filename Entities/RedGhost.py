@@ -75,7 +75,10 @@ class RedGhost(GhostInterface):
                     if not self.isValidPos(nx, ny):
                         break
 
-                if (nx, ny) not in visited and self.isValidPos(nx, ny):
+                if (nx, ny) not in visited and self.isValidPos(nx, ny)\
+                    and Board.coordinates[nx][ny] != Board.PINK_GHOST \
+                    and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
+                    and Board.coordinates[nx][ny] != Board.ORANGE_GHOST: #check collision:
                     nh = self.heuristic(nx, ny)
                     nf = f - h + nh + abs(nx - x) + abs(ny - y)
                     heapq.heappush(heap, (nf, nh, nx, ny, path + [(nx, ny)]))
@@ -118,7 +121,7 @@ class RedGhost(GhostInterface):
                 if (nx, ny) not in visited and self.isValidPos(nx, ny)\
                     and Board.coordinates[nx][ny] != Board.PINK_GHOST \
                     and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
-                    and Board.coordinates[nx][ny] != Board.ORANGE_GHOST: #check collision:::
+                    and Board.coordinates[nx][ny] != Board.ORANGE_GHOST: #check collision:
                     nh = self.heuristic(nx, ny)
                     nf = f - h + nh + abs(nx - x) + abs(ny - y)
                     heapq.heappush(heap, (nf, nh, nx, ny, path + [(nx, ny)]))

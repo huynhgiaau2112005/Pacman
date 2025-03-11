@@ -4,7 +4,7 @@ from Config import Config, Object, Sounds, Board
 from Levels.ExperimentBox import ExperimentBox
 import pygame
 import time
-import psutil #de lay bo nho
+import tracemalloc #de lay bo nho
 import os
 import math
 import pygame
@@ -39,7 +39,7 @@ class Level3:
 
     for i in range (len(Board.coordinates)): # Chỉ giữ lại giá trị Pacman, OrangeGhost trong ma trận Coordinates, các giá trị còn lại bỏ
       for j in range (len(Board.coordinates[0])):
-        if Board.coordinates[i][j] not in (Board.PACMAN, Board.ORANGE_GHOST):
+        if (i, j) not in ((Object.orangeGhostX, Object.orangeGhostY), (Object.pacmanX, Object.pacmanY)):
             Board.coordinates[i][j] = Board.BLANK
   
   def get_volume(self, ghost_x, ghost_y, pac_x, pac_y, max_distance=15):
@@ -62,16 +62,17 @@ class Level3:
       clock = pygame.time.Clock()
       countFrames = 0
 
-      # Lấy bộ nhớ trước
-      process = psutil.Process(os.getpid())
-      before_mem = process.memory_info().rss / (1024 * 1024)  # MB
+      # Bắt đầu đo bộ nhớ
+      tracemalloc.start()
 
       start_time = time.time()  # Lấy thời gian bắt đầu
       path, numberofExpandnodes = EM().orangeGhost.getTargetPathInformation((Object.orangeGhostX, Object.orangeGhostY), (Object.pacmanX, Object.pacmanY))
       end_time = time.time()    # Lấy thời gian kết thúc
 
-      # Lấy bộ nhớ sau
-      after_mem = process.memory_info().rss / (1024 * 1024)  # MB
+      # Lấy kết quả peak memory usage
+      current, peak = tracemalloc.get_traced_memory()
+      # Dừng đo
+      tracemalloc.stop()
 
       node = 0
       while Config.running:
@@ -141,9 +142,9 @@ class Level3:
 
       start = False
 
-      algorithm = "BFS"
+      algorithm = "UCS"
       search_time = end_time - start_time
-      memory_usage = after_mem - before_mem
+      memory_usage = peak / (2 ** 20)
       num_expanded_nodes = numberofExpandnodes
           
       while Config.running:
