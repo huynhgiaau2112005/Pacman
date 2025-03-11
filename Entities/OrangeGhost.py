@@ -102,7 +102,10 @@ class OrangeGhost(GhostInterface):
                 if (nx, ny) == (Object.pacmanX, Object.pacmanY):
                     return path + subpath, len(visited)
                     
-                if (nx, ny) not in visited and self.isValidPos(nx, ny):
+                if (nx, ny) not in visited and self.isValidPos(nx, ny)\
+                    and Board.coordinates[nx][ny] != Board.PINK_GHOST \
+                    and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
+                    and Board.coordinates[nx][ny] != Board.RED_GHOST: #check collision::
                     heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + subpath))
                 
         return None, len(visited)

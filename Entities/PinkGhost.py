@@ -113,7 +113,10 @@ class PinkGhost(GhostInterface):
                         go_y = ghost_y + y
 
                         if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and ((go_x, go_y) not in visited or depth + 1 < depths[(go_x, go_y)]):
-                            if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9:
+                            if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9\
+                                and Board.coordinates[go_x][go_y] != Board.ORANGE_GHOST \
+                                and Board.coordinates[go_x][go_y] != Board.BLUE_GHOST \
+                                and Board.coordinates[go_x][go_y] != Board.RED_GHOST: #check collision::
                                 stack.append((go_x, go_y))
                                 visited.add((go_x, go_y))
                                 depths[(go_x, go_y)] = depth + 1
