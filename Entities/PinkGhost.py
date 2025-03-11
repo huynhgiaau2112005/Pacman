@@ -86,6 +86,7 @@ class PinkGhost(GhostInterface):
         ids_direction = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
         max_depth_limit = 100
         depth_limit = 1
+        expanded_nodes = 0
         while depth_limit <= max_depth_limit:
             stack = deque([(ghost)])
             visited = set([ghost])
@@ -94,6 +95,7 @@ class PinkGhost(GhostInterface):
 
             while stack:# is not None or count_depth == depth_limit:
                 (ghost_x, ghost_y) = stack.pop()
+                expanded_nodes += 1
                 depth = depths[(ghost_x, ghost_y)]
                 #print((depth_limit, (ghost_x, ghost_y), depth))
 
@@ -105,7 +107,7 @@ class PinkGhost(GhostInterface):
                         (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
                     #path.append((ghost_x, ghost_y))
                     path = path[::-1]
-                    return path
+                    return path, expanded_nodes
 
                 if depth < depth_limit:
                     for x, y in ids_direction:

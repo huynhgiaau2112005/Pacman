@@ -71,10 +71,13 @@ class BlueGhost(GhostInterface):
         visited = set([ghost])
         parent = {ghost : None} # con : cha
 
+        expanded_nodes = 0
+
         if ghost == pacman: return None
 
         while queue:
             ghost_x, ghost_y = queue.popleft()
+            expanded_nodes += 1
 
             #Neu gap pacman
             if (ghost_x, ghost_y) == pacman:     
@@ -84,7 +87,7 @@ class BlueGhost(GhostInterface):
                     (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
                 #path.append((ghost_x, ghost_y))
                 path = path[::-1]
-                return path
+                return path, expanded_nodes
 
             #Duyet BFS
             for x, y in bfs_direction:
@@ -98,7 +101,8 @@ class BlueGhost(GhostInterface):
                         queue.append((go_x, go_y))
                         visited.add((go_x, go_y))
                         parent[(go_x, go_y)] = (ghost_x, ghost_y)                        
-        return None
+        return None, expanded_nodes
+    
     def updatePos(self):
         oldX, oldY = Object.blueGhostX, Object.blueGhostY
         newPos = self.getTargetPos((oldX, oldY), (Object.pacmanX, Object.pacmanY))

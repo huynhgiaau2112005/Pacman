@@ -68,14 +68,13 @@ class Level1:
             before_mem = process.memory_info().rss / (1024 * 1024)  # MB
 
             start_time = time.time()  # Lấy thời gian bắt đầu
-            result = EM().blueGhost.getTargetPathInformation((Object.blueGhostX, Object.blueGhostY), (Object.pacmanX, Object.pacmanY))   # Chạy thuật toán
+            listPos, expanded_nodes = EM().blueGhost.getTargetPathInformation((Object.blueGhostX, Object.blueGhostY), (Object.pacmanX, Object.pacmanY))   # Chạy thuật toán
             end_time = time.time()    # Lấy thời gian kết thúc
 
             # Lấy bộ nhớ sau
             after_mem = process.memory_info().rss / (1024 * 1024)  # MB
 
-            listPos = deque(EM().blueGhost.getTargetPathInformation((Object.blueGhostX, Object.blueGhostY), (Object.pacmanX, Object.pacmanY)))
-            expanded_nodes = len(listPos)
+            listPos = deque(listPos)
 
             while Config.running:
                 Config.screen.fill('black')

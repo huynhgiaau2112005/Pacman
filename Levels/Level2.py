@@ -70,15 +70,14 @@ class Level2:
             before_mem = process.memory_info().rss / (1024 * 1024)  # MB
 
             start_time = time.time()  # Lấy thời gian bắt đầu
-            result = EM().pinkGhost.getTargetPathInformation((Object.pinkGhostX, Object.pinkGhostY), (Object.pacmanX, Object.pacmanY))   # Chạy thuật toán
+            listPos, expanded_nodes = EM().pinkGhost.getTargetPathInformation((Object.pinkGhostX, Object.pinkGhostY), (Object.pacmanX, Object.pacmanY))   # Chạy thuật toán
             end_time = time.time()    # Lấy thời gian kết thúc
 
             # Lấy bộ nhớ sau
             after_mem = process.memory_info().rss / (1024 * 1024)  # MB
-        
 
-            listPos = deque(EM().pinkGhost.getTargetPathInformation((Object.pinkGhostX, Object.pinkGhostY), (Object.pacmanX, Object.pacmanY)))
-            expanded_nodes = len(listPos)
+            listPos = deque(listPos)
+
             while Config.running:
                 Config.screen.fill('black')
                 for event in pygame.event.get():
