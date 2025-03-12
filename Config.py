@@ -6,12 +6,14 @@ class Config:
   flicker = False
   running = True
   score = 0
+  life = 3
   width = 800
   height = 800
   p_width = 800//30 
   p_height = 750//32
   screen = pygame.display.set_mode([width, height])
   fps = 60 #600
+  counter = 0
 
 class Object:
   PACMAN_SIZE = 35
@@ -19,7 +21,11 @@ class Object:
   PINK_GHOST_SIZE = 35
   RED_GHOST_SIZE = 35
   ORANGE_GHOST_SIZE = 35
-
+  PACMAN_DIRX = 0
+  PACMAN_DIRY = 0
+  PACMAN_DRAWX = 0
+  PACMAN_DRAWY = 0
+  
   pacmanX = 24
   pacmanY = 14
   blueGhostX = 15
@@ -48,6 +54,7 @@ class Color:
   color_food = 'white'
   color_bg = 'black'
   color_fence = 'white'
+  color_text = 'white'
 
 class Material:
   BlueGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/blue.png"), (Object.BLUE_GHOST_SIZE, Object.BLUE_GHOST_SIZE))

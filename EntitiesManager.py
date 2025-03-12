@@ -9,11 +9,10 @@ class EntitiesManager:
         self.redGhost = RedGhost()
         self.pinkGhost = PinkGhost()
         self.blueGhost = BlueGhost()
-        #self.ghosts = [BlueGhost, RedGhost, PinkGhost, OrangeGhost]
+        self.life = Life()
+        self.score = Score()
     
     def reset(self):
         self.pacman.reset()
         self.maze.reset()
         self.redGhost.reset()
-        # for ghost in self.ghosts:
-        # ghost.reset()
