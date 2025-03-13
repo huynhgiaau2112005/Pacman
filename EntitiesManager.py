@@ -16,3 +16,6 @@ class EntitiesManager:
         self.pacman.reset()
         self.maze.reset()
         self.redGhost.reset()
+        self.orangeGhost.reset()
+        self.pinkGhost.reset()
+        self.blueGhost.reset()

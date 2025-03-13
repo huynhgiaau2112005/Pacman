@@ -20,6 +20,17 @@ class Level6:
         quit = False
         start = False
 
+        Object.blueGhostX = 15
+        Object.blueGhostY = 13
+        Object.pinkGhostX = 16
+        Object.pinkGhostY = 13
+        Object.orangeGhostX = 16#27
+        Object.orangeGhostY = 15#3
+        Object.redGhostX = 15
+        Object.redGhostY = 15
+        Object.pacmanX = 24
+        Object.pacmanY = 14
+        
         # Setup tọa độ thực
         (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
         (Object.realRedGhostX, Object.realRedGhostY) = Entity.getRealCoordinates((Object.redGhostX, Object.redGhostY), Object.RED_GHOST_SIZE)
@@ -47,18 +58,11 @@ class Level6:
         pacmanPos = (Object.pacmanX, Object.pacmanY)
         ghost = [(Object.blueGhostX, Object.blueGhostY), (Object.pinkGhostX, Object.pinkGhostY), (Object.redGhostX, Object.redGhostY), (Object.orangeGhostX, Object.orangeGhostY)]
         
-        if pacmanPos == (Object.orangeGhostX, Object.orangeGhostY):
-            print("Pacman is caught by Orange Ghost")
-        
-        if pacmanPos == (Object.redGhostX, Object.redGhostY):
-            print("Pacman is caught by Red Ghost")
-        
-        if pacmanPos == (Object.pinkGhostX, Object.pinkGhostY):
-            print("Pacman is caught by Pink Ghost")
-        
-        if pacmanPos == (Object.blueGhostX, Object.blueGhostY): 
-            print("Pacman is caught by Blue Ghost")
-        return pacmanPos in ghost
+        if pacmanPos in ghost:
+            Config.life -= 1
+            return True
+
+        return False
 
     def execute(self):
         global PacmanGetCaught, quit, start
@@ -105,30 +109,6 @@ class Level6:
                 Config.counter = 0
                 
             EM().maze.draw()
-
-            if not start:
-                color = (255, 255, 255 - countFrames % 30 * 8)
-                labelFont = pygame.font.Font(None, 30)
-                space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
-                Config.screen.blit(space_to_start, (Config.width / 2 - 130, Config.height / 2 - 50))
-
-            if start and not PacmanGetCaught:
-                if countFrames % 15 == 0:
-                    EM().orangeGhost.updatePos()
-                    PacmanGetCaught = self.isCaught()
-                    EM().blueGhost.updatePos()
-                    PacmanGetCaught = self.isCaught()
-                    EM().pinkGhost.updatePos()
-                    PacmanGetCaught = self.isCaught()
-                    EM().redGhost.updatePos()
-                    PacmanGetCaught = self.isCaught()
-                    EM().pacman.updatePos()
-                EM().blueGhost.move()
-                EM().pinkGhost.move()
-                EM().orangeGhost.move()
-                EM().redGhost.move()
-                EM().pacman.move()
-
             EM().pacman.setupdrawdir()
             EM().blueGhost.draw()
             EM().pinkGhost.draw()
@@ -136,6 +116,39 @@ class Level6:
             EM().redGhost.draw()
             EM().life.draw()
             EM().score.draw()
+
+            if not start:
+                overlay = pygame.Surface((Config.width, Config.height))
+                overlay.set_alpha(180)  # Độ trong suốt (0: trong suốt hoàn toàn, 255: không trong suốt)
+                overlay.fill((0, 0, 0))  # Màu đen
+                Config.screen.blit(overlay, (0, 0))
+                
+                color = (255, 255, 255 - countFrames % 30 * 8)
+                labelFont = pygame.font.Font(None, 30)
+                space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
+                Config.screen.blit(space_to_start, (Config.width / 2 - 130, Config.height / 2 - 50))
+
+            if start and not PacmanGetCaught:
+                if countFrames % 15 == 0:
+                    EM().blueGhost.updatePos()
+                    EM().pinkGhost.updatePos()
+                    EM().orangeGhost.updatePos()
+                    EM().redGhost.updatePos()
+                    PacmanGetCaught = self.isCaught()
+                    EM().pacman.updatePos()
+                    
+                    if PacmanGetCaught:
+                        Sounds.ghost_move_sound.stop()
+                        #Sounds.pacman_death()
+                        time.sleep(1.5)
+                        self.setup()
+                        continue
+                        
+                EM().blueGhost.move()
+                EM().pinkGhost.move()
+                EM().orangeGhost.move()
+                EM().redGhost.move()
+                EM().pacman.move()
 
             pygame.display.flip()
             clock.tick(Config.fps)

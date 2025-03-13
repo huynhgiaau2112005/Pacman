@@ -6,7 +6,7 @@ class Config:
   flicker = False
   running = True
   score = 0
-  life = 3
+  life = 3  
   width = 800
   height = 800
   p_width = 800//30 
@@ -21,6 +21,7 @@ class Object:
   PINK_GHOST_SIZE = 35
   RED_GHOST_SIZE = 35
   ORANGE_GHOST_SIZE = 35
+  HEART_SIZE = 35
   PACMAN_DIRX = 0
   PACMAN_DIRY = 0
   PACMAN_DRAWX = 0
@@ -67,6 +68,7 @@ class Material:
   Pacman2Image = pygame.transform.scale(pygame.image.load("Assets/player_images/2.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
   Pacman3Image = pygame.transform.scale(pygame.image.load("Assets/player_images/3.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
   Pacman4Image = pygame.transform.scale(pygame.image.load("Assets/player_images/4.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
+  HeartImage = pygame.transform.scale(pygame.image.load("Assets/player_images/heart.png"), (Object.HEART_SIZE, Object.HEART_SIZE))
   
 class Board:
 # 0 = empty black rectangle, 1 = dot, 2 = big dot, 3 = vertical line,

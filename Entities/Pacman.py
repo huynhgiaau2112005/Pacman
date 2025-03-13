@@ -11,17 +11,23 @@ class Pacman(Entity):
     realY = Object.realPacmanY
     Config.screen.blit(Material.Pacman1Image, (realY, realX))
 
+  def picperdir(self, picture, direction, realX, realY):
+    if direction == (0, 1) or direction == (0, 0):
+          Config.screen.blit(picture, (realY, realX))
+    elif direction == (0, -1):
+        Config.screen.blit(pygame.transform.flip(picture, True, False), (realY, realX))  
+    elif direction == (-1, 0):
+        Config.screen.blit(pygame.transform.rotate(picture, 90),(realY, realX))
+    elif direction == (1, 0):
+        Config.screen.blit(pygame.transform.rotate(picture, 270), (realY, realX))
+        
   def drawdir(self, direction):
     realX = Object.realPacmanX
     realY = Object.realPacmanY
-    if direction == (0, 1) or direction == (0, 0):
-        Config.screen.blit(self.PacmanImages[Config.counter // 5], (realY, realX))
-    elif direction == (0, -1):
-        Config.screen.blit(pygame.transform.flip(self.PacmanImages[Config.counter // 5], True, False), (realY, realX))  
-    elif direction == (-1, 0):
-        Config.screen.blit(pygame.transform.rotate(self.PacmanImages[Config.counter // 5], 90),(realY, realX))
-    elif direction == (1, 0):
-        Config.screen.blit(pygame.transform.rotate(self.PacmanImages[Config.counter // 5], 270), (realY, realX))
+    if (Board.maze[Object.pacmanX][Object.pacmanY] != 0):
+      self.picperdir(self.PacmanImages[Config.counter // 5], direction, realX, realY)
+    else:
+      self.picperdir(Material.Pacman2Image, direction, realX, realY)    
         
   def setupdrawdir(self):
     direction = Object.PACMAN_DIRX, Object.PACMAN_DIRY
@@ -94,26 +100,38 @@ class Pacman(Entity):
     Object.realPacmanY = realY
   
   def updatePos(self):
-        oldX, oldY = Object.pacmanX, Object.pacmanY
-        if Board.maze[oldX][oldY] == 1:
-          Board.maze[oldX][oldY] = 0
-          Config.score += 10
-        if Board.maze[oldX][oldY] == 2:
-          Board.maze[oldX][oldY] = 0
-          Config.score += 100
-             
-        targetPos = self.getTargetPos()
+    print (Object.pacmanX, Object.pacmanY)
+    oldX, oldY = Object.pacmanX, Object.pacmanY
+    if (oldX, oldY) == (15, 0):
+      Board.coordinates[oldX][oldY] = Board.BLANK
+      Board.coordinates[15][28] = Board.PACMAN
+      Object.pacmanX, Object.pacmanY = 15,28
+      return
+    elif (oldX, oldY) == (15, 29):
+      Board.coordinates[oldX][oldY] = Board.BLANK
+      Board.coordinates[15][1] = Board.PACMAN
+      Object.pacmanX, Object.pacmanY = 15, 1
+      return
+    else:
+      if Board.maze[oldX][oldY] == 1:
+        Board.maze[oldX][oldY] = 0
+        Config.score += 10
+      if Board.maze[oldX][oldY] == 2:
+        Board.maze[oldX][oldY] = 0
+        Config.score += 100
         
-        if targetPos:
-            targetX, targetY = targetPos
-            newX, newY = oldX, oldY
-            
-            if targetX != oldX:
-                newX += 1 if targetX > oldX else -1 
-            if targetY != oldY:
-                newY += 1 if targetY > oldY else -1 
+      targetPos = self.getTargetPos()
+      
+      if targetPos:
+          targetX, targetY = targetPos
+          newX, newY = oldX, oldY
+          
+          if targetX != oldX:
+              newX += 1 if targetX > oldX else -1 
+          if targetY != oldY:
+              newY += 1 if targetY > oldY else -1 
 
 
-            Board.coordinates[oldX][oldY] = Board.BLANK
-            Board.coordinates[newX][newY] = Board.PACMAN
-            Object.pacmanX, Object.pacmanY = newX, newY
+          Board.coordinates[oldX][oldY] = Board.BLANK
+          Board.coordinates[newX][newY] = Board.PACMAN
+          Object.pacmanX, Object.pacmanY = newX, newY
