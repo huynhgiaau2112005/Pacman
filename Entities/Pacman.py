@@ -121,6 +121,7 @@ class Pacman(Entity):
     Object.realPacmanY = realY
   
   def updatePos(self):
+    #print (Object.pacmanX, Object.pacmanY)
     oldX, oldY = Object.pacmanX, Object.pacmanY
     if (oldX, oldY) == (15, 0):
       Board.coordinates[oldX][oldY] = Board.BLANK

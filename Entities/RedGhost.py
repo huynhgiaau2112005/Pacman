@@ -145,4 +145,76 @@ class RedGhost(GhostInterface):
 
             Object.redGhostX = newX
             Object.redGhostY = newY
+   
+    def isValidPosPowerUp(self, x, y):
+        if 0 <= x < Board.ROWS and 0 <= y < Board.COLS:
+            if (Board.maze[x][y] < 3 or Board.maze[x][y] == 9) and Board.coordinates[x][y] == Board.BLANK \
+                and (x, y) != (Object.pinkGhostX, Object.pinkGhostY) \
+                and (x, y) != (Object.blueGhostX, Object.blueGhostY) \
+                and (x, y) != (Object.orangeGhostX, Object.orangeGhostY) \
+                and (x, y) != (Object.pacmanX, Object.pacmanY):
+                return True
+        return False
+    
+    def getTargetPosPowerUp(self, ghost, target): # A*
+        (posX, posY) = ghost
+        f = 0
+        h = f + self.heuristic(posX, posY)
+        
+        heap = [(f, h, posX, posY, [])] # f(x), heuristic curX, curY, path
+        heapq.heapify(heap)
+        
+        visited = set([(posX, posY)])
+        
+        DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)] # lên, xuống, phải, trái
+
+        PATH_LIMIT = 100
+
+        while heap:
+            (f, h, x, y, path) = heapq.heappop(heap)
+            
+            if (x, y) == target or len(path) == PATH_LIMIT:
+                return path[0] if len(path) > 0 else None
+
+            for dx, dy in DIRECTIONS:
+                nx = x + dx
+                ny = y + dy
+                if not self.isValidPosPowerUp(nx, ny):
+                    continue
+                while (nx, ny) not in Board.nodes and (nx, ny) != target:
+                    nx += dx
+                    ny += dy
+                    if not self.isValidPosPowerUp(nx, ny):
+                        break
+
+                if (nx, ny) not in visited and self.isValidPosPowerUp(nx, ny)\
+                    and (nx, ny) != (Object.pinkGhostX, Object.pinkGhostY) \
+                    and (nx, ny) != (Object.blueGhostX, Object.blueGhostY) \
+                    and (nx, ny) != (Object.orangeGhostX, Object.orangeGhostY) \
+                    and (nx, ny) != (Object.pacmanX, Object.pacmanY): #check collision:
+                    nh = self.heuristic(nx, ny)
+                    nf = f - h + nh + abs(nx - x) + abs(ny - y)
+                    heapq.heappush(heap, (nf, nh, nx, ny, path + [(nx, ny)]))
+                    visited.add((nx, ny))
+        
+        return None
+    
+    def updatePosPowerUp(self, target):
+        oldX, oldY = Object.redGhostX, Object.redGhostY
+        targetPos = self.getTargetPosPowerUp((oldX, oldY), target)
+
+        if targetPos:
+            targetX, targetY = targetPos
+
+            newX, newY = oldX, oldY
+            if targetX != oldX:
+                newX += (targetX - oldX) // abs(targetX - oldX) 
+            if targetY != oldY:
+                newY += (targetY - oldY) // abs(targetY - oldY)
+
+            Board.coordinates[oldX][oldY] = Board.BLANK
+            Board.coordinates[newX][newY] = Board.RED_GHOST
+
+            Object.redGhostX = newX
+            Object.redGhostY = newY
 

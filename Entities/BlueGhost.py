@@ -129,3 +129,54 @@ class BlueGhost(GhostInterface):
 
             Object.blueGhostX = newX
             Object.blueGhostY = newY
+
+    def getTargetPosPowerUp(self, ghost, target):
+        bfs_direction = [(0, -1), (0, 1), (-1, 0), (1, 0)] #trai, phai, tren, duoi
+        queue = deque([ghost])
+        visited = set([ghost])
+        parent = {ghost : None} # con : cha
+
+        if ghost == target: return None
+
+        while queue:
+            ghost_x, ghost_y = queue.popleft()
+
+            #Neu gap target
+            if (ghost_x, ghost_y) == target:     
+                path = [] #list path
+                while (ghost_x, ghost_y) != ghost:
+                    path.append((ghost_x, ghost_y))
+                    (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
+                #path.append((ghost_x, ghost_y))
+                path = path[::-1]
+                return path[0]
+
+            #Duyet BFS
+            for x, y in bfs_direction:
+                go_x = ghost_x + x
+                go_y = ghost_y + y
+                if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS:
+                    if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9) and (go_x, go_y) not in visited\
+                        and (go_x, go_y) != (Object.pinkGhostX, Object.pinkGhostY) \
+                        and (go_x, go_y) != (Object.orangeGhostX, Object.orangeGhostY) \
+                        and (go_x, go_y) != (Object.redGhostX, Object.redGhostY) \
+                        and (go_x, go_y) != (Object.pacmanX, Object.pacmanY): #check collision::
+                        queue.append((go_x, go_y))
+                        visited.add((go_x, go_y))
+                        parent[(go_x, go_y)] = (ghost_x, ghost_y)                        
+        return None
+    
+    def updatePosPowerUp(self, target):
+        oldX, oldY = Object.blueGhostX, Object.blueGhostY
+        newPos = self.getTargetPosPowerUp((oldX, oldY), target)
+        
+        if newPos:
+            newX, newY = newPos
+
+            Board.coordinates[oldX][oldY] = Board.BLANK
+            Board.coordinates[newX][newY] = Board.BLUE_GHOST
+
+            Object.blueGhostX = newX
+            Object.blueGhostY = newY
+
+    

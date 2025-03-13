@@ -1,35 +1,64 @@
 from Entities.Entity import Entity
 from EntitiesManager import EntitiesManager as EM
 from Config import Config, Object, Sounds, Board
-from collections import deque
-import threading
 import time
+import random
 import pygame
 
 start = False
 PacmanGetCaught = False
+inPowerUpMode = False
+quit = False
+countFrames = 0
+
+STATUS_DEAD = 0
+STATUS_CHASING = 1
+STATUS_POWERUP = 2
+
+BlueGhostStatus = STATUS_CHASING
+PinkGhostStatus = STATUS_CHASING
+OrangeGhostStatus = STATUS_CHASING
+RedGhostStatus = STATUS_CHASING
+
+setUpCoordinates = {
+    'blueGhost': (14, 12),
+    'pinkGhost': (16, 12),
+    'orangeGhost': (16, 17),
+    'redGhost': (14, 17),
+    'pacman': (24, 14)
+}
+availableNodes = [(21, 16), (27, 4), (27, 13), (14, 13), (2, 2), (6, 2), (15, 14), (16, 13), (18, 10), (18, 19), (30, 2), (14, 15), (9, 10), (9, 19), (24, 10), (15, 7), (24, 19), (15, 16), (6, 13), (16, 15), (21, 2), (14, 17), (30, 13), (15, 0), (16, 17), (2, 27), (12, 13), (6, 27), (27, 22), (30, 27), (12, 15), (14, 12), (21, 27), (9, 7), (9, 16), (24, 7), (24, 16), (15, 13), (2, 13), (16, 12), (24, 25), (2, 22), (6, 22), (14, 14), (16, 14), (21, 13), (12, 10), (21, 22), (9, 2), (12, 19), (14, 16), (27, 10), (24, 2), (27, 19), (16, 16), (15, 29), (24, 4), (6, 10), (15, 22), (6, 19), (12, 14), (9, 27), (15, 15), (21, 10), (24, 27), (21, 19), (12, 16), (27, 7), (27, 16), (27, 25), (15, 17), (9, 13), (27, 27), (2, 7), (9, 22), (2, 16), (24, 13), (15, 10), (6, 7), (24, 22), (15, 19), (6, 16), (27, 2), (30, 16), (15, 12), (21, 7)]
+TargetPosInPowerUp = {
+    'blueGhost': (6, 2),
+    'pinkGhost': (30, 2),
+    'orangeGhost': (30, 27),
+    'redGhost': (2, 27),
+}
 
 class Level6:
     def __init__(self):
         pass
 
     def setup(self):
-        global PacmanGetCaught, quit, start
+        global PacmanGetCaught, quit, start, inPowerUpMode, countFrames
+        global BlueGhostStatus, PinkGhostStatus, OrangeGhostStatus, RedGhostStatus
 
+        countFrames = 0
         PacmanGetCaught = False
         quit = False
         start = False
+        inPowerUpMode = False
+        BlueGhostStatus = STATUS_CHASING
+        PinkGhostStatus = STATUS_CHASING
+        OrangeGhostStatus = STATUS_CHASING
+        RedGhostStatus = STATUS_CHASING
 
-        Object.blueGhostX = 16
-        Object.blueGhostY = 15
-        Object.pinkGhostX = 16
-        Object.pinkGhostY = 13
-        Object.orangeGhostX = 15#27
-        Object.orangeGhostY = 13#3
-        Object.redGhostX = 15
-        Object.redGhostY = 15
-        Object.pacmanX = 24
-        Object.pacmanY = 14
+        # Setup tọa độ ma trận
+        Object.pacmanX, Object.pacmanY = setUpCoordinates["pacman"]
+        Object.blueGhostX, Object.blueGhostY = setUpCoordinates["blueGhost"]
+        Object.pinkGhostX, Object.pinkGhostY = setUpCoordinates["pinkGhost"]
+        Object.orangeGhostX, Object.orangeGhostY = setUpCoordinates["orangeGhost"]
+        Object.redGhostX, Object.redGhostY = setUpCoordinates["redGhost"]
         
         # Setup tọa độ thực
         (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
@@ -63,14 +92,83 @@ class Level6:
             return True
 
         return False
+    
+    def setTargetPosPowerUp(self):
+        global TargetPosInPowerUp
+        curCoordinates = {"blueGhost": (Object.blueGhostX, Object.blueGhostY), 
+                          "pinkGhost": (Object.pinkGhostX, Object.pinkGhostY),
+                          "redGhost": (Object.redGhostX, Object.redGhostY), 
+                          "orangeGhost": (Object.orangeGhostX, Object.orangeGhostY)}
+        
+        newBlueGhostPos = TargetPosInPowerUp["blueGhost"]
+        while newBlueGhostPos in set(TargetPosInPowerUp.values()) | set(curCoordinates.values()):
+            newBlueGhostPos = random.choice(availableNodes)
+            print("change")
+        TargetPosInPowerUp["blueGhost"] = newBlueGhostPos
+
+        newPinkGhostPos = TargetPosInPowerUp["pinkGhost"]
+        while newPinkGhostPos in set(TargetPosInPowerUp.values()) | set(curCoordinates.values()):
+            newPinkGhostPos = random.choice(availableNodes)
+            print("change")
+        TargetPosInPowerUp["pinkGhost"] = newPinkGhostPos
+
+        newOrangeGhostPos = TargetPosInPowerUp["orangeGhost"]
+        while newOrangeGhostPos in set(TargetPosInPowerUp.values()) | set(curCoordinates.values()):
+            newOrangeGhostPos = random.choice(availableNodes)
+            print("change")
+        TargetPosInPowerUp["orangeGhost"] = newOrangeGhostPos
+
+        newRedGhostPos = TargetPosInPowerUp["redGhost"]
+        while newRedGhostPos in set(TargetPosInPowerUp.values()) | set(curCoordinates.values()):
+            newRedGhostPos = random.choice(availableNodes)
+            print("change")
+        TargetPosInPowerUp["redGhost"] = newRedGhostPos
+
+    def ghostChasingMode(self):
+        global start, PacmanGetCaught, countFrames
+        if start and not PacmanGetCaught:
+            if countFrames % 15 == 0:
+                EM().blueGhost.updatePos()
+                if countFrames > 60 * 5:
+                    EM().pinkGhost.updatePos()
+                if countFrames > 60 * 10:
+                    EM().orangeGhost.updatePos()
+                if countFrames > 60 * 15:
+                    EM().redGhost.updatePos()
+                PacmanGetCaught = self.isCaught()
+                EM().pacman.updatePos()    
+                    
+            EM().blueGhost.move()
+            EM().pinkGhost.move()
+            EM().orangeGhost.move()
+            EM().redGhost.move()
+            EM().pacman.move()
+    
+    def powerupMode(self):
+        global PacmanGetCaught, random_node, countFrames
+        if start and not PacmanGetCaught:
+            if countFrames % 60 * 2 == 0:
+                self.setTargetPosPowerUp()
+                print(TargetPosInPowerUp)
+            if countFrames % 15 == 0:
+                EM().pacman.updatePos()
+                EM().pinkGhost.updatePosPowerUp(TargetPosInPowerUp["pinkGhost"])
+                EM().orangeGhost.updatePosPowerUp(TargetPosInPowerUp["orangeGhost"])
+                EM().blueGhost.updatePosPowerUp(TargetPosInPowerUp["blueGhost"])
+                EM().redGhost.updatePosPowerUp(TargetPosInPowerUp["redGhost"])
+            
+            EM().pinkGhost.move()
+            EM().pacman.move()
+            EM().blueGhost.move()
+            EM().orangeGhost.move()
+            EM().redGhost.move()
 
     def execute(self):
-        global PacmanGetCaught, quit, start
+        global PacmanGetCaught, quit, start, countFrames
 
         self.setup()
         clock = pygame.time.Clock()
         last_tick = pygame.time.get_ticks()
-        countFrames = 0
         
         Sounds.dramatic_theme_music_sound.set_volume(0.1)
         Sounds.dramatic_theme_music_sound.play(loops=-1)
@@ -128,35 +226,25 @@ class Level6:
                 space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
                 Config.screen.blit(space_to_start, (Config.width / 2 - 130, Config.height / 2 - 50))
 
-            if start and not PacmanGetCaught:
-                if countFrames % 15 == 0:
-                    EM().blueGhost.updatePos()
-                    EM().pinkGhost.updatePos()
-                    EM().orangeGhost.updatePos()
-                    EM().redGhost.updatePos()
-                    PacmanGetCaught = self.isCaught()
-                    EM().pacman.updatePos()
-                    
-                    if PacmanGetCaught:
-                        Sounds.ghost_move_sound.stop()
-                        #Sounds.pacman_death()
-                        time.sleep(1.5)
-                        self.setup()
-                        continue
-                        
-                EM().blueGhost.move()
-                EM().pinkGhost.move()
-                EM().orangeGhost.move()
-                EM().redGhost.move()
-                EM().pacman.move()
+            if not inPowerUpMode:
+                self.ghostChasingMode()
+            else: 
+                self.powerupMode()
 
             pygame.display.flip()
             clock.tick(Config.fps)
-            countFrames += 1
-
+            if start:
+                countFrames += 1
+                
             if PacmanGetCaught:
+                #Sounds.dramatic_theme_music_sound.stop()
                 Sounds.ghost_move_sound.stop()
-                Sounds.dramatic_theme_music_sound.stop()
+                #Sounds.pacman_death()
+                time.sleep(1.5)
+                self.setup()
+                continue
+        Sounds.dramatic_theme_music_sound.stop()
+
                 
 
 
