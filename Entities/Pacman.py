@@ -86,12 +86,16 @@ class Pacman(Entity):
     dx, dy = (targetX - realX), (targetY - realY)
     sX = Config.p_height / 15
     sY = Config.p_width / 15
+  
     if abs(dx) >= sX:
       realX = realX + dx / abs(dx) * sX
     else:
       realX = targetX
     
-    if abs(dy) >= sY:
+    if (abs(dy)) == 728:
+      realY = 0
+      realX = 15 * Config.p_height + Config.p_height * 0.5 - Object.PACMAN_SIZE * 0.5
+    elif abs(dy) >= sY:
       realY = realY + dy / abs(dy) * sY
     else:
       realY = targetY
@@ -100,7 +104,6 @@ class Pacman(Entity):
     Object.realPacmanY = realY
   
   def updatePos(self):
-    print (Object.pacmanX, Object.pacmanY)
     oldX, oldY = Object.pacmanX, Object.pacmanY
     if (oldX, oldY) == (15, 0):
       Board.coordinates[oldX][oldY] = Board.BLANK
