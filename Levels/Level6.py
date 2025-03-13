@@ -382,7 +382,7 @@ class Level6:
         
         # Chữ SCORE: ...
         font_small = pygame.font.Font(None, 80)
-        score_text = f"SCORE: {Config.score}"
+        score_text = f"Score: {Config.score}"
         text_score = font_small.render(score_text, True, (255, 255, 255))
         text_score_rect = text_score.get_rect(center=(400, you_lose_text_rect.bottom + 50))
 
@@ -482,7 +482,7 @@ class Level6:
         
         # Chữ SCORE: ...
         font_small = pygame.font.Font(None, 80)
-        score_text = f"SCORE: {Config.score}"
+        score_text = f"Score: {Config.score}"
         text_score = font_small.render(score_text, True, (255, 255, 255))
         text_score_rect = text_score.get_rect(center=(400, you_lose_text_rect.bottom + 50))
 
