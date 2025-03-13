@@ -169,18 +169,22 @@ class Level6:
                 orangeGhostPos = (Object.realOrangeGhostX, Object.realOrangeGhostY)
                 redGhostPos = (Object.realRedGhostX, Object.realRedGhostY)
 
-                if isHit(pinkGhostPos, pacmanPos):
+                if Mode.PinkGhost == Mode.POWER_UP and isHit(pinkGhostPos, pacmanPos):
                     (Object.realPinkGhostX, Object.realPinkGhostY) = Entity.getRealCoordinates((Object.pinkGhostX, Object.pinkGhostY), Object.PINK_GHOST_SIZE)
                     Mode.PinkGhost = Mode.DEAD
-                if isHit(blueGhostPos, pacmanPos):
+                    Config.score += 50
+                if Mode.BlueGhost == Mode.POWER_UP and  isHit(blueGhostPos, pacmanPos):
                     (Object.realBlueGhostX, Object.realBlueGhostY) = Entity.getRealCoordinates((Object.blueGhostX, Object.blueGhostY), Object.BLUE_GHOST_SIZE)
                     Mode.BlueGhost = Mode.DEAD
-                if isHit(orangeGhostPos, pacmanPos):
+                    Config.score += 50
+                if Mode.OrangeGhost == Mode.POWER_UP and  isHit(orangeGhostPos, pacmanPos):
                     (Object.realOrangeGhostX, Object.realOrangeGhostY) = Entity.getRealCoordinates((Object.orangeGhostX, Object.orangeGhostY), Object.ORANGE_GHOST_SIZE)
                     Mode.OrangeGhost = Mode.DEAD
-                if isHit(redGhostPos, pacmanPos):
+                    Config.score += 50
+                if Mode.RedGhost == Mode.POWER_UP and  isHit(redGhostPos, pacmanPos):
                     (Object.realRedGhostX, Object.realRedGhostY) = Entity.getRealCoordinates((Object.redGhostX, Object.redGhostY), Object.RED_GHOST_SIZE)
                     Mode.RedGhost = Mode.DEAD
+                    Config.score += 50
 
             if Mode.BlueGhost == Mode.POWER_UP:   
                 EM().blueGhost.move()
