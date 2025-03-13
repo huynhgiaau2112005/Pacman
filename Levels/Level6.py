@@ -175,15 +175,15 @@ class Level6:
                     (Object.realPinkGhostX, Object.realPinkGhostY) = Entity.getRealCoordinates((Object.pinkGhostX, Object.pinkGhostY), Object.PINK_GHOST_SIZE)
                     Mode.PinkGhost = Mode.DEAD
                     Config.score += 50
-                if Mode.BlueGhost == Mode.POWER_UP and  isHit(blueGhostPos, pacmanPos):
+                if Mode.BlueGhost == Mode.POWER_UP and isHit(blueGhostPos, pacmanPos):
                     (Object.realBlueGhostX, Object.realBlueGhostY) = Entity.getRealCoordinates((Object.blueGhostX, Object.blueGhostY), Object.BLUE_GHOST_SIZE)
                     Mode.BlueGhost = Mode.DEAD
                     Config.score += 50
-                if Mode.OrangeGhost == Mode.POWER_UP and  isHit(orangeGhostPos, pacmanPos):
+                if Mode.OrangeGhost == Mode.POWER_UP and isHit(orangeGhostPos, pacmanPos):
                     (Object.realOrangeGhostX, Object.realOrangeGhostY) = Entity.getRealCoordinates((Object.orangeGhostX, Object.orangeGhostY), Object.ORANGE_GHOST_SIZE)
                     Mode.OrangeGhost = Mode.DEAD
                     Config.score += 50
-                if Mode.RedGhost == Mode.POWER_UP and  isHit(redGhostPos, pacmanPos):
+                if Mode.RedGhost == Mode.POWER_UP and isHit(redGhostPos, pacmanPos):
                     (Object.realRedGhostX, Object.realRedGhostY) = Entity.getRealCoordinates((Object.redGhostX, Object.redGhostY), Object.RED_GHOST_SIZE)
                     Mode.RedGhost = Mode.DEAD
                     Config.score += 50
@@ -239,6 +239,9 @@ class Level6:
         global PacmanGetCaught, quit, start, countFrames
         
         quit = False
+
+        font = pygame.font.Font(None, 30)
+        shortkey = font.render("ESC: Menu  Q: Quit", True, (255, 255, 255))
 
         while Config.running and not quit:
             # Score and Lives:
@@ -334,6 +337,8 @@ class Level6:
 
                 self.deadGhostRelives()
 
+                Config.screen.blit(shortkey, (580, 800 - 30))
+            
                 pygame.display.flip()
                 clock.tick(Config.fps)
                 if start:
@@ -350,7 +355,7 @@ class Level6:
                 
                 if self.isWin() or self.isLost():
                     break
-            
+                
             if self.isWin():
                 self.win()
             elif self.isLost():
@@ -366,6 +371,9 @@ class Level6:
 
         Sounds.ghost_move_sound.stop()
         Sounds.dramatic_theme_music_sound.stop()
+        
+        font = pygame.font.Font(None, 30)
+        shortkey = font.render("ESC: Menu  Q: Quit", True, (255, 255, 255))
 
         # Font và màu sắc
         font_big = pygame.font.Font(None, 150)  # Font lớn cho "YOU LOST"
@@ -455,6 +463,8 @@ class Level6:
                 Config.running = False
                 return
 
+            Config.screen.blit(shortkey, (580, 800 - 30))
+            
             pygame.display.flip()
             clock.tick(Config.fps)
     
@@ -466,6 +476,9 @@ class Level6:
 
         Sounds.ghost_move_sound.stop()
         Sounds.dramatic_theme_music_sound.stop()
+        
+        font = pygame.font.Font(None, 30)
+        shortkey = font.render("ESC: Menu  Q: Quit", True, (255, 255, 255))
 
         # Font và màu sắc
         font_big = pygame.font.Font(None, 150)  # Font lớn cho "YOU LOST"
@@ -482,7 +495,7 @@ class Level6:
         
         # Chữ SCORE: ...
         font_small = pygame.font.Font(None, 80)
-        score_text = f"Score: {Config.score}"
+        score_text = f"SCORE: {Config.score}"
         text_score = font_small.render(score_text, True, (255, 255, 255))
         text_score_rect = text_score.get_rect(center=(400, you_lose_text_rect.bottom + 50))
 
@@ -554,6 +567,8 @@ class Level6:
             elif ClickOnButton == "Quit":
                 Config.running = False
                 return
-
+            
+            Config.screen.blit(shortkey, (580, 800 - 30))
+            
             pygame.display.flip()
             clock.tick(Config.fps)

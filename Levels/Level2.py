@@ -55,6 +55,10 @@ class Level2:
 
         quit = False
         start = False
+
+        font = pygame.font.Font(None, 30)
+        shortkey = font.render("ESC: Menu  Q: Quit", True, (255, 255, 255))
+
         while Config.running and not quit:
             self.setup()
 
@@ -118,6 +122,11 @@ class Level2:
                 EM().pinkGhost.draw()
                 
                 if not start:
+                    overlay = pygame.Surface((Config.width, Config.height))
+                    overlay.set_alpha(180)  # Độ trong suốt (0: trong suốt hoàn toàn, 255: không trong suốt)
+                    overlay.fill((0, 0, 0))  # Màu đen
+                    Config.screen.blit(overlay, (0, 0))
+
                     color = (255, 255, 255 - countFrames % 30 * 8)
                     labelFont = pygame.font.Font(None, 30)
                     space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
@@ -127,6 +136,8 @@ class Level2:
                     ghost_move_sound.stop()
                     Sounds.dramatic_theme_music_sound.stop()
                     break
+
+                Config.screen.blit(shortkey, (580, 800 - 30))
 
                 pygame.display.flip()
                 clock.tick(Config.fps)
@@ -139,6 +150,8 @@ class Level2:
             memory_usage = peak / (2 ** 20)
             num_expanded_nodes = expanded_nodes
                 
+            Config.screen.blit(shortkey, (580, 800 - 30))
+            
             while Config.running:
                 nextTestcase = ExperimentBox().showResultBoard(algorithm, search_time, memory_usage, num_expanded_nodes)
                 if nextTestcase == -1:

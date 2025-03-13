@@ -53,6 +53,9 @@ class Level3:
     quit = False
     start = False
 
+    font = pygame.font.Font(None, 30)
+    shortkey = font.render("ESC: Menu  Q: Quit", True, (255, 255, 255))
+
     while Config.running and not quit:
       self.setup()
 
@@ -126,10 +129,17 @@ class Level3:
         EM().orangeGhost.draw() 
         
         if not start:
+          overlay = pygame.Surface((Config.width, Config.height))
+          overlay.set_alpha(180)  # Độ trong suốt (0: trong suốt hoàn toàn, 255: không trong suốt)
+          overlay.fill((0, 0, 0))  # Màu đen
+          Config.screen.blit(overlay, (0, 0))
+
           color = (255, 255, 255 - countFrames % 30 * 8)
           labelFont = pygame.font.Font(None, 30)
           space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
           Config.screen.blit(space_to_start, (Config.width / 2 - 130, Config.height / 2 - 50))
+        
+        Config.screen.blit(shortkey, (580, 800 - 30))
 
         pygame.display.flip()
         clock.tick(Config.fps)
@@ -146,7 +156,9 @@ class Level3:
       search_time = end_time - start_time
       memory_usage = peak / (2 ** 20)
       num_expanded_nodes = numberofExpandnodes
-          
+       
+      Config.screen.blit(shortkey, (580, 800 - 30))
+   
       while Config.running:
         nextTestcase = ExperimentBox().showResultBoard(algorithm, search_time, memory_usage, num_expanded_nodes)
         if nextTestcase == -1:
