@@ -8,7 +8,7 @@ pygame.init()
 class Life:
     def __init__(self):
         self.font = pygame.font.Font(None, 36)
-        self.x = 150
+        self.x = 160
         self.y = 755
         
     def draw(self):

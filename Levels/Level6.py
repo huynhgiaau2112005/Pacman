@@ -11,6 +11,8 @@ quit = False
 
 countFrames = 0
 
+ClickOnButton = None
+
 setUpCoordinates = {
     'blueGhost': (14, 12),
     'pinkGhost': (16, 12),
@@ -227,57 +229,195 @@ class Level6:
         if Mode.RedGhost == Mode.DEAD:
             EM().redGhost.moveRelive()
 
+    def isWin(self):
+        return Config.normalDots + Config.powerupDots == 0
+    
+    def isLost(self):
+        return Config.life == 0
+
     def execute(self):
         global PacmanGetCaught, quit, start, countFrames
-
-        self.setup()
-        clock = pygame.time.Clock()
-        last_tick = pygame.time.get_ticks()
         
-        Sounds.dramatic_theme_music_sound.set_volume(0.1)
-        Sounds.dramatic_theme_music_sound.play(loops=-1)
+        quit = False
 
         while Config.running and not quit:
-            Config.screen.fill('black')
+            # Score and Lives:
+            Config.score = 0
+            Config.life = 3
             
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    Sounds.ghost_move_sound.stop()
-                    Sounds.dramatic_theme_music_sound.stop()
-                    Config.running = False
-                    return
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        Sounds.ghost_move_sound.stop()
-                        Sounds.dramatic_theme_music_sound.stop()
-                        quit = True
-                        return
-                    if event.key == pygame.K_q:
+            Config.normalDots = 242
+            Config.powerupDots = 4
+
+            Board.maze = [row[:] for row in Board.initMaze]
+
+            self.setup()
+            clock = pygame.time.Clock()
+            last_tick = pygame.time.get_ticks()
+            
+            Sounds.dramatic_theme_music_sound.set_volume(0.1)
+            Sounds.dramatic_theme_music_sound.play(loops=-1)
+
+            while Config.running and not quit:
+                Config.screen.fill('black')
+                
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
                         Sounds.ghost_move_sound.stop()
                         Sounds.dramatic_theme_music_sound.stop()
                         Config.running = False
                         return
-                    if event.key == pygame.K_SPACE:
-                        if not start:
-                            Sounds.ghost_move_sound.play(loops=-1)  # Lặp vô hạn
-                            start = True
-                    if event.key == pygame.K_UP:
-                        Config.KeyMovePacman = pygame.K_UP
-                    if event.key == pygame.K_DOWN:
-                        Config.KeyMovePacman = pygame.K_DOWN
-                    if event.key == pygame.K_LEFT:
-                        Config.KeyMovePacman = pygame.K_LEFT
-                    if event.key == pygame.K_RIGHT:
-                        Config.KeyMovePacman = pygame.K_RIGHT
-            
-            if Config.counter < 19:
-                Config.counter += 1
-                if Config.counter > 3:
-                  Config.flicker = False
-            else:
-                Config.flicker = True
-                Config.counter = 0
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            Sounds.ghost_move_sound.stop()
+                            Sounds.dramatic_theme_music_sound.stop()
+                            quit = True
+                            return
+                        if event.key == pygame.K_q:
+                            Sounds.ghost_move_sound.stop()
+                            Sounds.dramatic_theme_music_sound.stop()
+                            Config.running = False
+                            return
+                        if event.key == pygame.K_SPACE:
+                            if not start:
+                                Sounds.ghost_move_sound.play(loops=-1)  # Lặp vô hạn
+                                start = True
+                        if event.key == pygame.K_UP:
+                            Config.KeyMovePacman = pygame.K_UP
+                        if event.key == pygame.K_DOWN:
+                            Config.KeyMovePacman = pygame.K_DOWN
+                        if event.key == pygame.K_LEFT:
+                            Config.KeyMovePacman = pygame.K_LEFT
+                        if event.key == pygame.K_RIGHT:
+                            Config.KeyMovePacman = pygame.K_RIGHT
                 
+                if Config.counter < 19:
+                    Config.counter += 1
+                    if Config.counter > 3:
+                        Config.flicker = False
+                else:
+                    Config.flicker = True
+                    Config.counter = 0
+                    
+                EM().maze.draw()
+                EM().pacman.setupdrawdir()
+                EM().blueGhost.draw()
+                EM().pinkGhost.draw()
+                EM().orangeGhost.draw()
+                EM().redGhost.draw()
+                EM().life.draw()
+                EM().score.draw()
+
+                if not start:
+                    overlay = pygame.Surface((Config.width, Config.height))
+                    overlay.set_alpha(180)  # Độ trong suốt (0: trong suốt hoàn toàn, 255: không trong suốt)
+                    overlay.fill((0, 0, 0))  # Màu đen
+                    Config.screen.blit(overlay, (0, 0))
+                    
+                    color = (255, 255, 255 - countFrames % 30 * 8)
+                    labelFont = pygame.font.Font(None, 30)
+                    space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
+                    Config.screen.blit(space_to_start, (Config.width / 2 - 130, Config.height / 2 - 50))
+
+                if Mode.powerupTime == 0:
+                    Mode.mode = Mode.CHASING
+                    Mode.BlueGhost = Mode.CHASING if Mode.BlueGhost != Mode.DEAD else Mode.DEAD
+                    Mode.PinkGhost = Mode.CHASING if Mode.PinkGhost != Mode.DEAD else Mode.DEAD
+                    Mode.OrangeGhost = Mode.CHASING if Mode.OrangeGhost != Mode.DEAD else Mode.DEAD
+                    Mode.RedGhost = Mode.CHASING if Mode.RedGhost != Mode.DEAD else Mode.DEAD
+
+                self.ghostChasingMode()
+                self.powerupMode()
+
+                if start and countFrames % 15 == 0:
+                    EM().pacman.updatePos()
+                EM().pacman.move()
+
+                self.deadGhostRelives()
+
+                pygame.display.flip()
+                clock.tick(Config.fps)
+                if start:
+                    countFrames += 1
+                    Mode.powerupTime -= 1 if Mode.powerupTime > 0 else 0
+                    
+                if PacmanGetCaught and not self.isLost():
+                    #Sounds.dramatic_theme_music_sound.stop()
+                    Sounds.ghost_move_sound.stop()
+                    #Sounds.pacman_death()
+                    time.sleep(1.5)
+                    self.setup()
+                    continue
+                
+                if self.isWin() or self.isLost():
+                    break
+            
+            if self.isWin():
+                self.win()
+            elif self.isLost():
+                self.lose()
+
+            Sounds.dramatic_theme_music_sound.stop()
+    
+    def lose(self):
+        global quit, ClickOnButton
+
+        clock = pygame.time.Clock()
+        last_tick = pygame.time.get_ticks()
+
+        Sounds.ghost_move_sound.stop()
+        Sounds.dramatic_theme_music_sound.stop()
+
+        # Font và màu sắc
+        font_big = pygame.font.Font(None, 150)  # Font lớn cho "YOU LOST"
+        font_small = pygame.font.Font(None, 80)  # Font cho "SCORE"
+        font_button = pygame.font.Font(None, 40)  # Font cho các nút
+        color_text = (0, 0, 0)  # Màu chữ đen
+        color_button = (255, 255, 255)  # Màu nền nút trắng
+        color_hover = (144, 238, 144)  # Màu hover xanh nhạt
+
+        # Chữ YOU LOST
+        font_big = pygame.font.Font(None, 150)  # Chọn font, 150px là kích thước chữ
+        you_lose_text = font_big.render("YOU LOSE", True, (255, 0, 0))  # Chữ đỏ
+        you_lose_text_rect = you_lose_text.get_rect(center=(400, 800 * 1 // 4))  # Căn giữa, y = 2/3 chiều cao màn hình
+        
+        # Chữ SCORE: ...
+        font_small = pygame.font.Font(None, 80)
+        score_text = f"SCORE: {Config.score}"
+        text_score = font_small.render(score_text, True, (255, 255, 255))
+        text_score_rect = text_score.get_rect(center=(400, you_lose_text_rect.bottom + 50))
+
+        # Tạo nút (text, x, y, width, height)
+        buttons = [
+            ("Play Again", 400, text_score_rect.bottom + 50 + 50, 200, 70),
+            ("Menu", 400, text_score_rect.bottom + 150 + 50, 200, 70),
+            ("Quit", 400, text_score_rect.bottom + 250 + 50, 200, 70),
+        ]
+
+        ClickOnButton = None
+
+        while Config.running and not quit:
+            Config.screen.fill('black')
+
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    Config.running = False
+                    return
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        quit = True
+                        return
+                    if event.key == pygame.K_q:
+                        Config.running = False
+                        return
+                    if event.key == pygame.K_SPACE:
+                        print("space is pressed when win")
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    for text, x, y, w, h in buttons:
+                        if x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2:
+                            ClickOnButton = text 
+
             EM().maze.draw()
             EM().pacman.setupdrawdir()
             EM().blueGhost.draw()
@@ -287,51 +427,133 @@ class Level6:
             EM().life.draw()
             EM().score.draw()
 
-            if not start:
-                overlay = pygame.Surface((Config.width, Config.height))
-                overlay.set_alpha(180)  # Độ trong suốt (0: trong suốt hoàn toàn, 255: không trong suốt)
-                overlay.fill((0, 0, 0))  # Màu đen
-                Config.screen.blit(overlay, (0, 0))
+            overlay = pygame.Surface((Config.width, Config.height))
+            overlay.set_alpha(180)  # Độ trong suốt (0: trong suốt hoàn toàn, 255: không trong suốt)
+            overlay.fill((0, 0, 0))  # Màu đen
+            Config.screen.blit(overlay, (0, 0))
+
+            # Vẽ chữ
+            Config.screen.blit(you_lose_text, you_lose_text_rect)
+            Config.screen.blit(text_score, text_score_rect)
+
+            # Vẽ nút
+            for text, x, y, w, h in buttons:
+                is_hovered = x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2
+                color = color_hover if is_hovered else color_button  # Đổi màu khi hover
                 
-                color = (255, 255, 255 - countFrames % 30 * 8)
-                labelFont = pygame.font.Font(None, 30)
-                space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
-                Config.screen.blit(space_to_start, (Config.width / 2 - 130, Config.height / 2 - 50))
+                pygame.draw.rect(Config.screen, color, (x - w // 2, y - h // 2, w, h), border_radius=15)  # Nút bo góc
+                text_render = font_button.render(text, True, color_text)
+                text_rect = text_render.get_rect(center=(x, y))
+                Config.screen.blit(text_render, text_rect)  # Hiển thị chữ trên nút
 
-            if Mode.powerupTime == 0:
-                Mode.mode = Mode.CHASING
-                Mode.BlueGhost = Mode.CHASING if Mode.BlueGhost != Mode.DEAD else Mode.DEAD
-                Mode.PinkGhost = Mode.CHASING if Mode.PinkGhost != Mode.DEAD else Mode.DEAD
-                Mode.OrangeGhost = Mode.CHASING if Mode.OrangeGhost != Mode.DEAD else Mode.DEAD
-                Mode.RedGhost = Mode.CHASING if Mode.RedGhost != Mode.DEAD else Mode.DEAD
-
-            self.ghostChasingMode()
-            self.powerupMode()
-
-            if start and countFrames % 15 == 0:
-                EM().pacman.updatePos()
-            EM().pacman.move()
-
-            self.deadGhostRelives()
+            if ClickOnButton == "Play Again":
+                return
+            elif ClickOnButton == "Menu":
+                quit = True
+                return
+            elif ClickOnButton == "Quit":
+                Config.running = False
+                return
 
             pygame.display.flip()
             clock.tick(Config.fps)
-            if start:
-                countFrames += 1
-                Mode.powerupTime -= 1 if Mode.powerupTime > 0 else 0
-                
-            if PacmanGetCaught:
-                #Sounds.dramatic_theme_music_sound.stop()
-                Sounds.ghost_move_sound.stop()
-                #Sounds.pacman_death()
-                time.sleep(1.5)
-                self.setup()
-                continue
+    
+    def win(self):
+        global quit, ClickOnButton
+
+        clock = pygame.time.Clock()
+        last_tick = pygame.time.get_ticks()
+
+        Sounds.ghost_move_sound.stop()
         Sounds.dramatic_theme_music_sound.stop()
 
-                
+        # Font và màu sắc
+        font_big = pygame.font.Font(None, 150)  # Font lớn cho "YOU LOST"
+        font_small = pygame.font.Font(None, 80)  # Font cho "SCORE"
+        font_button = pygame.font.Font(None, 40)  # Font cho các nút
+        color_text = (0, 0, 0)  # Màu chữ đen
+        color_button = (255, 255, 255)  # Màu nền nút trắng
+        color_hover = (144, 238, 144)  # Màu hover xanh nhạt
 
-
+        # Chữ YOU LOST
+        font_big = pygame.font.Font(None, 150)  # Chọn font, 150px là kích thước chữ
+        you_lose_text = font_big.render("YOU WIN", True, (144, 238, 144))  # Chữ đỏ
+        you_lose_text_rect = you_lose_text.get_rect(center=(400, 800 * 1 // 4))  # Căn giữa, y = 2/3 chiều cao màn hình
         
+        # Chữ SCORE: ...
+        font_small = pygame.font.Font(None, 80)
+        score_text = f"SCORE: {Config.score}"
+        text_score = font_small.render(score_text, True, (255, 255, 255))
+        text_score_rect = text_score.get_rect(center=(400, you_lose_text_rect.bottom + 50))
 
-    
+        # Tạo nút (text, x, y, width, height)
+        buttons = [
+            ("Play Again", 400, text_score_rect.bottom + 50 + 50, 200, 70),
+            ("Menu", 400, text_score_rect.bottom + 150 + 50, 200, 70),
+            ("Quit", 400, text_score_rect.bottom + 250 + 50, 200, 70),
+        ]
+
+        ClickOnButton = None
+
+        while Config.running and not quit:
+            Config.screen.fill('black')
+
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    Config.running = False
+                    return
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        quit = True
+                        return
+                    if event.key == pygame.K_q:
+                        Config.running = False
+                        return
+                    if event.key == pygame.K_SPACE:
+                        print("space is pressed when win")
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    for text, x, y, w, h in buttons:
+                        if x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2:
+                            ClickOnButton = text 
+
+            EM().maze.draw()
+            EM().pacman.setupdrawdir()
+            EM().blueGhost.draw()
+            EM().pinkGhost.draw()
+            EM().orangeGhost.draw()
+            EM().redGhost.draw()
+            EM().life.draw()
+            EM().score.draw()
+
+            overlay = pygame.Surface((Config.width, Config.height))
+            overlay.set_alpha(180)  # Độ trong suốt (0: trong suốt hoàn toàn, 255: không trong suốt)
+            overlay.fill((0, 0, 0))  # Màu đen
+            Config.screen.blit(overlay, (0, 0))
+
+            # Vẽ chữ
+            Config.screen.blit(you_lose_text, you_lose_text_rect)
+            Config.screen.blit(text_score, text_score_rect)
+
+            # Vẽ nút
+            for text, x, y, w, h in buttons:
+                is_hovered = x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2
+                color = color_hover if is_hovered else color_button  # Đổi màu khi hover
+                
+                pygame.draw.rect(Config.screen, color, (x - w // 2, y - h // 2, w, h), border_radius=15)  # Nút bo góc
+                text_render = font_button.render(text, True, color_text)
+                text_rect = text_render.get_rect(center=(x, y))
+                Config.screen.blit(text_render, text_rect)  # Hiển thị chữ trên nút
+
+            if ClickOnButton == "Play Again":
+                return
+            elif ClickOnButton == "Menu":
+                quit = True
+                return
+            elif ClickOnButton == "Quit":
+                Config.running = False
+                return
+
+            pygame.display.flip()
+            clock.tick(Config.fps)

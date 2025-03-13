@@ -5,12 +5,14 @@ pygame.mixer.init()
 class Config:
   flicker = False
   running = True
-  score = 0
-  life = 3  
+  score = 0 #max score without powerup: 2500 (1: 10, 2: 20) -> 2500 + 50 * 4 * 4 = 3300 (max score with powerup)
+  life = 3
+  normalDots = 0 # 242
+  powerupDots = 0 # 4
   KeyMovePacman = None
   width = 800
   height = 800
-  p_width = 800//30 
+  p_width = 800/30 
   p_height = 750//32
   screen = pygame.display.set_mode([width, height])
   fps = 60 #600
@@ -99,7 +101,7 @@ class Board:
   ROWS = 33
   COLS = 30
   BLANK = 0
-  maze = [
+  initMaze = [
 [6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5],
 [3, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 3],
 [3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3],
@@ -134,10 +136,24 @@ class Board:
 [3, 7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 3],
 [7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8]
 ]  
+  maze = []
   coordinates = []
   nodes = {(21, 16), (27, 4), (27, 13), (14, 13), (2, 2), (6, 2), (15, 14), (16, 13), (18, 10), (18, 19), (30, 2), (14, 15), (9, 10), (9, 19), (24, 10), (15, 7), (24, 19), (15, 16), (6, 13), (16, 15), (21, 2), (14, 17), (30, 13), (15, 0), (16, 17), (2, 27), (12, 13), (6, 27), (27, 22), (30, 27), (12, 15), (14, 12), (21, 27), (9, 7), (9, 16), (24, 7), (24, 16), (15, 13), (2, 13), (16, 12), (24, 25), (2, 22), (6, 22), (14, 14), (16, 14), (21, 13), (12, 10), (21, 22), (9, 2), (12, 19), (14, 16), (27, 10), (24, 2), (27, 19), (16, 16), (15, 29), (24, 4), (6, 10), (15, 22), (6, 19), (12, 14), (9, 27), (15, 15), (21, 10), (24, 27), (21, 19), (12, 16), (27, 7), (27, 16), (27, 25), (15, 17), (9, 13), (27, 27), (2, 7), (9, 22), (2, 16), (24, 13), (15, 10), (6, 7), (24, 22), (15, 19), (6, 16), (27, 2), (30, 16), (15, 12), (21, 7)}
 
 def setup():
+  # normalDots = 0
+  # powerupDots = 0
+  # for i in range(len(Board.initMaze)):
+  #   for j in range(len(Board.initMaze[i])):
+  #     if Board.initMaze[i][j] == 1:
+  #       normalDots += 1 # 242
+  #     elif Board.initMaze[i][j] == 2:
+  #       powerupDots += 1 # 4
+  # print(normalDots, powerupDots)
+
+  # set up map cho maze
+  Board.maze = [row[:] for row in Board.initMaze]
+
   # set up coordinates
   Board.coordinates = [[Board.BLANK for _ in range(Board.COLS)] for _ in range(Board.ROWS)] # tạo ma trận cols x rows với các ô có giá trị 0
 

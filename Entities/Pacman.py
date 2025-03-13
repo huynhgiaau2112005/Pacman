@@ -140,12 +140,14 @@ class Pacman(Entity):
       (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((15, -1), Object.PACMAN_SIZE)
       return
     else:
-      if Board.maze[oldX][oldY] == 1:
+      if Board.maze[oldX][oldY] == 1: # normal dot
         Board.maze[oldX][oldY] = 0
         Config.score += 10
-      if Board.maze[oldX][oldY] == 2:
+        Config.normalDots -= 1
+      if Board.maze[oldX][oldY] == 2: # powerup dot
         Board.maze[oldX][oldY] = 0
         Config.score += 20
+        Config.powerupDots -= 1
         Mode.mode = Mode.POWER_UP
         Mode.powerupTime = Mode.powerupTimeLimit  
         Mode.BlueGhost = Mode.POWER_UP if Mode.BlueGhost != Mode.DEAD else Mode.DEAD    
