@@ -41,7 +41,7 @@ class Pacman(Entity):
         
   def keyboardHandle(self):
     keys = pygame.key.get_pressed() # Kiểm tra giá trị keys
-
+    
     if keys is None:  
       return (0, 0)
     elif keys[pygame.K_UP]:
@@ -62,20 +62,37 @@ class Pacman(Entity):
       return False
     
   def getTargetPos(self):
-    dx, dy = self.keyboardHandle()
+    (dx, dy) = self.keyboardHandle()
     oldx, oldy = Object.pacmanX + Object.PACMAN_DIRX, Object.pacmanY + Object.PACMAN_DIRY
     
-    if (dx, dy) != (0, 0):
-      newx, newy = Object.pacmanX + dx, Object.pacmanY + dy
-      
-      if self.isValidPos(newx, newy):
-        Object.PACMAN_DIRX, Object.PACMAN_DIRY = (dx, dy)
-        return (newx, newy)
-      
-    if self.isValidPos(oldx, oldy):
-        return (oldx, oldy)
+    if ((dx, dy) != (0,0)):
+      Config.prevkeyboard = dx, dy
+
+      if (Config.prevkeyboard) != (0, 0):
+        newx, newy = Object.pacmanX + dx, Object.pacmanY + dy
+        if self.isValidPos(newx, newy):
+          Object.PACMAN_DIRX, Object.PACMAN_DIRY = (dx, dy)
+          return (newx, newy)
+        
+      if self.isValidPos(oldx, oldy):
+          return (oldx, oldy)
+      else:
+          return (Object.pacmanX, Object.pacmanY)
+        
     else:
-        return (Object.pacmanX, Object.pacmanY)
+      (dx, dy) = Config.prevkeyboard
+
+      if (Config.prevkeyboard) != (0, 0):
+        newx, newy = Object.pacmanX + dx, Object.pacmanY + dy
+        if self.isValidPos(newx, newy):
+          Object.PACMAN_DIRX, Object.PACMAN_DIRY = (dx, dy)
+          return (newx, newy)
+        
+      if self.isValidPos(oldx, oldy):
+          return (oldx, oldy)
+      else:
+          return (Object.pacmanX, Object.pacmanY)
+      
     
     
   def move(self):

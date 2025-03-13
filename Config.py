@@ -14,6 +14,7 @@ class Config:
   screen = pygame.display.set_mode([width, height])
   fps = 60 #600
   counter = 0
+  prevkeyboard = (0, 0)
 
 class Object:
   PACMAN_SIZE = 35
