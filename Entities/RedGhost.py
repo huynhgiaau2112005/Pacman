@@ -131,7 +131,6 @@ class RedGhost(GhostInterface):
     def updatePos(self):
         oldX, oldY = Object.redGhostX, Object.redGhostY
         targetPos = self.getTargetPos((oldX, oldY), (Object.pacmanX, Object.pacmanY))
-
         if targetPos:
             targetX, targetY = targetPos
 

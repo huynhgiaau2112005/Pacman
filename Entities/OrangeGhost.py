@@ -39,43 +39,42 @@ class OrangeGhost(GhostInterface):
         return False
     
     # Anh em chỉ cần viết thuật toán vào hàm này, các hàm còn lại Âu đã viết 
+   
     def getTargetPos(self, ghost, pacman): # UCS*
         (posX, posY) = ghost
         f = 0
         heap = [(f, posX, posY, [])] 
         heapq.heapify(heap)
-        visited = set([(posX, posY)])
+        visited = set([])
         
         DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)] # lên, xuống, phải, trái
         PATH_LIMIT = 100
 
         while heap:
             (f, x, y, path) = heapq.heappop(heap)
+            visited.add((x, y))
             
-            if Board.coordinates[x][y] == Board.PACMAN or len(path) == PATH_LIMIT:
-                return path[0]
-
+            #print(Board.coordinates[int(x)][int(y)])
+            if Board.coordinates[int(x)][int(y)] == Board.PACMAN or len(path) == PATH_LIMIT:
+                return path[0]   
+            
             for dx, dy in DIRECTIONS:
+                
                 nx = x + dx
                 ny = y + dy
                 
-                if not self.isValidPos(nx, ny):
-                    continue
-                while (nx, ny) not in Board.nodes and (nx, ny) != (Object.pacmanX, Object.pacmanY):
+                while self.isValidPos(nx, ny) and (nx, ny) not in Board.nodes and (nx, ny) != (Object.pacmanX, Object.pacmanY):
                     nx += dx
-                    ny += dy
-                    if not self.isValidPos(nx, ny):
-                        break
-
+                    ny += dy          
+                    
                 if (nx, ny) not in visited and self.isValidPos(nx, ny)\
                     and Board.coordinates[nx][ny] != Board.PINK_GHOST \
                     and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
-                    and Board.coordinates[nx][ny] != Board.ORANGE_GHOST: #check collision:
-                    nf = f + abs(nx - x) + abs(ny - y)
-                    heapq.heappush(heap, (nf, nx, ny, path + [(nx, ny)]))
-                    visited.add((nx, ny))
-        
+                    and Board.coordinates[nx][ny] != Board.RED_GHOST: #check collision::
+                    heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + [(nx, ny)]))
+                
         return None
+    
     
     def getTargetPathInformation(self, ghost, pacman):
         if ghost == pacman:
@@ -122,7 +121,6 @@ class OrangeGhost(GhostInterface):
     def updatePos(self):
         oldX, oldY = Object.orangeGhostX, Object.orangeGhostY
         targetPos = self.getTargetPos((oldX, oldY), (Object.pacmanX, Object.pacmanY))
-
         if targetPos:
             targetX, targetY = targetPos
 

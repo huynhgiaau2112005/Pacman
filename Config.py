@@ -30,14 +30,14 @@ class Object:
   
   pacmanX = 24
   pacmanY = 14
-  blueGhostX = 15
-  blueGhostY = 13
+  blueGhostX = 16
+  blueGhostY = 15
   pinkGhostX = 16
   pinkGhostY = 13
   redGhostX = 15
   redGhostY = 15
-  orangeGhostX = 16
-  orangeGhostY = 15
+  orangeGhostX = 15
+  orangeGhostY = 13
 
   realPacmanX = 0
   realPacmanY = 0

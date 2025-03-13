@@ -20,12 +20,12 @@ class Level6:
         quit = False
         start = False
 
-        Object.blueGhostX = 15
-        Object.blueGhostY = 13
+        Object.blueGhostX = 16
+        Object.blueGhostY = 15
         Object.pinkGhostX = 16
         Object.pinkGhostY = 13
-        Object.orangeGhostX = 16#27
-        Object.orangeGhostY = 15#3
+        Object.orangeGhostX = 15#27
+        Object.orangeGhostY = 13#3
         Object.redGhostX = 15
         Object.redGhostY = 15
         Object.pacmanX = 24
