@@ -7,6 +7,7 @@ class Config:
   running = True
   score = 0
   life = 3  
+  KeyMovePacman = None
   width = 800
   height = 800
   p_width = 800//30 
@@ -16,12 +17,26 @@ class Config:
   counter = 0
   prevkeyboard = (0, 0)
 
+class Mode:
+  CHASING = 0
+  POWER_UP = 1
+  mode = CHASING
+  powerupTime = 0
+  powerupTimeLimit = 60 * 8
+
+  DEAD = 3
+  BlueGhost = CHASING
+  PinkGhost = CHASING
+  OrangeGhost = CHASING
+  RedGhost = CHASING
+
 class Object:
   PACMAN_SIZE = 35
   BLUE_GHOST_SIZE = 35
   PINK_GHOST_SIZE = 35
   RED_GHOST_SIZE = 35
   ORANGE_GHOST_SIZE = 35
+  POWER_UP_SIZE = 35
   HEART_SIZE = 35
   PACMAN_DIRX = 0
   PACMAN_DIRY = 0
@@ -64,7 +79,7 @@ class Material:
   PinkGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/pink.png"), (Object.PINK_GHOST_SIZE, Object.PINK_GHOST_SIZE))
   OrangeGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/orange.png"), (Object.ORANGE_GHOST_SIZE, Object.ORANGE_GHOST_SIZE))
   DeadGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/dead.png"), (Config.p_height, Config.p_width))
-  PowerupImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/powerup.png"), (Config.p_height, Config.p_width))
+  PowerupImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/powerup.png"), (Object.POWER_UP_SIZE, Object.POWER_UP_SIZE))
   Pacman1Image = pygame.transform.scale(pygame.image.load("Assets/player_images/1.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
   Pacman2Image = pygame.transform.scale(pygame.image.load("Assets/player_images/2.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))
   Pacman3Image = pygame.transform.scale(pygame.image.load("Assets/player_images/3.png"), (Object.PACMAN_SIZE, Object.PACMAN_SIZE))

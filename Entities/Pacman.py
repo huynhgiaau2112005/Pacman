@@ -1,5 +1,5 @@
 from .Entity import Entity
-from Config import Config, Material, Object, Board
+from Config import Config, Material, Object, Board, Mode
 import pygame
 
 class Pacman(Entity):
@@ -40,24 +40,29 @@ class Pacman(Entity):
       self.drawdir(direction)
         
   def keyboardHandle(self):
-    keys = pygame.key.get_pressed() # Kiểm tra giá trị keys
-    
+    #keys = pygame.key.get_pressed() # Kiểm tra giá trị keys
+    keys = Config.KeyMovePacman
+
     if keys is None:  
       return (0, 0)
-    elif keys[pygame.K_UP]:
+    elif keys == pygame.K_UP:
       return (-1, 0)
-    elif keys[pygame.K_DOWN]:
+    elif keys == pygame.K_DOWN:
       return (1, 0)
-    elif keys[pygame.K_LEFT]:
+    elif keys == pygame.K_LEFT:
       return (0, -1)
-    elif keys[pygame.K_RIGHT]:
+    elif keys ==pygame.K_RIGHT:
       return (0, 1)
   
     return (0, 0)
   
   def isValidPos(self, x, y):
       if 0 <= x < Board.ROWS and 0 <= y < Board.COLS:
-          if (Board.maze[x][y] < 3 or Board.maze[x][y] == 9) and Board.coordinates[x][y] in (Board.BLANK, Board.PACMAN):
+          if (Board.maze[x][y] < 3 or Board.maze[x][y] == 9) \
+            and ((x, y) != (Object.blueGhostX, Object.blueGhostY) or Mode.BlueGhost != Mode.CHASING) \
+            and ((x, y) != (Object.pinkGhostX, Object.pinkGhostY) or Mode.PinkGhost != Mode.CHASING) \
+            and ((x, y) != (Object.redGhostX, Object.redGhostY) or Mode.RedGhost != Mode.CHASING) \
+            and ((x, y) != (Object.orangeGhostX, Object.orangeGhostY) or Mode.OrangeGhost != Mode.CHASING):
               return True
       return False
     
@@ -121,17 +126,18 @@ class Pacman(Entity):
     Object.realPacmanY = realY
   
   def updatePos(self):
-    #print (Object.pacmanX, Object.pacmanY)
     oldX, oldY = Object.pacmanX, Object.pacmanY
-    if (oldX, oldY) == (15, 0):
+    if (oldX, oldY) == (15, 0) and Config.KeyMovePacman == pygame.K_LEFT:
       Board.coordinates[oldX][oldY] = Board.BLANK
-      Board.coordinates[15][28] = Board.PACMAN
-      Object.pacmanX, Object.pacmanY = 15,28
+      Board.coordinates[15][29] = Board.PACMAN
+      Object.pacmanX, Object.pacmanY = 15, 29
+      (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((15, 30), Object.PACMAN_SIZE)
       return
-    elif (oldX, oldY) == (15, 29):
+    elif (oldX, oldY) == (15, 29) and Config.KeyMovePacman == pygame.K_RIGHT:
       Board.coordinates[oldX][oldY] = Board.BLANK
-      Board.coordinates[15][1] = Board.PACMAN
-      Object.pacmanX, Object.pacmanY = 15, 1
+      Board.coordinates[15][0] = Board.PACMAN
+      Object.pacmanX, Object.pacmanY = 15, 0
+      (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((15, -1), Object.PACMAN_SIZE)
       return
     else:
       if Board.maze[oldX][oldY] == 1:
@@ -139,8 +145,14 @@ class Pacman(Entity):
         Config.score += 10
       if Board.maze[oldX][oldY] == 2:
         Board.maze[oldX][oldY] = 0
-        Config.score += 100
-        
+        Config.score += 20
+        Mode.mode = Mode.POWER_UP
+        Mode.powerupTime = Mode.powerupTimeLimit  
+        Mode.BlueGhost = Mode.POWER_UP if Mode.BlueGhost != Mode.DEAD else Mode.DEAD    
+        Mode.PinkGhost = Mode.POWER_UP if Mode.PinkGhost != Mode.DEAD else Mode.DEAD       
+        Mode.RedGhost = Mode.POWER_UP if Mode.RedGhost != Mode.DEAD else Mode.DEAD   
+        Mode.OrangeGhost = Mode.POWER_UP  if Mode.OrangeGhost != Mode.DEAD else Mode.DEAD    
+
       targetPos = self.getTargetPos()
       
       if targetPos:
