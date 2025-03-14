@@ -1,9 +1,10 @@
 from Levels import *
-from Config import setup
+from Config import setup, Sounds
 from Menu import Menu
 import pygame
 
 def mainBusiness():
+  Sounds.beginning_game_sound.play()
   setup()
   pygame.init()
   menu = Menu()

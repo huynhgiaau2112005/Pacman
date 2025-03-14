@@ -180,6 +180,12 @@ class Sounds:
   ghost_move_sound = pygame.mixer.Sound("Assets/sounds/ghost_move.mp3")  # Âm thanh ma di chuyển
   pacman_death_sound = pygame.mixer.Sound("Assets/sounds/pacman_death.wav")
   beginning_game_sound = pygame.mixer.Sound("Assets/sounds/pacman_beginning.wav")
+  ghost_move_powerup_sound = pygame.mixer.Sound("Assets/sounds/ghost_move_powerup.mp3")
+  pacman_eat_ghost_sound = pygame.mixer.Sound("Assets/sounds/pacman_eat_ghost.mp3")
+  hover_sound = pygame.mixer.Sound("Assets/sounds/hover.mp3")
+  click_sound = pygame.mixer.Sound("Assets/sounds/click.wav")
+  win_sound = pygame.mixer.Sound("Assets/sounds/win.mp3")
+  lose_sound = pygame.mixer.Sound("Assets/sounds/lose.wav")
 
   def beginning_game(self):
     self.beginning_game_sound.play()

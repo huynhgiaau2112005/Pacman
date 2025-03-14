@@ -91,11 +91,13 @@ class Level1:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             ghost_move_sound.stop()
+                            Sounds.click_sound.play()
                             Sounds.dramatic_theme_music_sound.stop()
                             quit = True
                             return
                         if event.key == pygame.K_q:
                             ghost_move_sound.stop()
+                            Sounds.click_sound.play()
                             Sounds.dramatic_theme_music_sound.stop()
                             Config.running = False
                             return
@@ -148,6 +150,8 @@ class Level1:
                 clock.tick(Config.fps)
                 countFrames += 1
             
+            Sounds.lose_sound.play()
+
             start = False
 
             algorithm = "BFS"
@@ -156,7 +160,7 @@ class Level1:
             num_expanded_nodes = expanded_nodes
             
             Config.screen.blit(shortkey, (580, 800 - 30))   
-             
+            
             while Config.running:
                 nextTestcase = ExperimentBox().showResultBoard(algorithm, search_time, memory_usage, num_expanded_nodes)
                 

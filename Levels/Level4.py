@@ -94,11 +94,13 @@ class Level4:
           elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
               ghost_move_sound.stop()
+              Sounds.click_sound.play()
               Sounds.dramatic_theme_music_sound.stop()
               quit = True
               return
             if event.key == pygame.K_q:
               ghost_move_sound.stop()
+              Sounds.click_sound.play()
               Sounds.dramatic_theme_music_sound.stop()
               Config.running = False
               return
@@ -142,9 +144,9 @@ class Level4:
           labelFont = pygame.font.Font(None, 30)
           space_to_start = labelFont.render("PRESS SPACE TO START", True, color)
           Config.screen.blit(space_to_start, (Config.width / 2 - 130, Config.height / 2 - 50))
-    
+
         Config.screen.blit(shortkey, (580, 800 - 30))
-            
+
         pygame.display.flip()
         clock.tick(Config.fps)
         countFrames += 1
@@ -153,7 +155,9 @@ class Level4:
           ghost_move_sound.stop()
           Sounds.dramatic_theme_music_sound.stop()
           break
-
+      
+      Sounds.lose_sound.play()
+      
       start = False
 
       algorithm = "A*"

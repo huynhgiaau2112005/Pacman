@@ -1,4 +1,4 @@
-from Config import Config
+from Config import Config, Sounds
 import pygame
 
 BoxWidth = 400
@@ -16,6 +16,9 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 font = pygame.font.Font(None, 32)
+
+prevHoverOn = None
+curHoverOn = None
 
 class ExperimentBox:
     def showResultBoard(self, algorithm, search_time, memory_usage , num_expanded_nodes):
@@ -36,12 +39,16 @@ class ExperimentBox:
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
+        global prevHoverOn, curHoverOn
+        curHoverOn = None
+
         for i in range(5):
             button_x = ButtonX + i * (10 + ButtonWidth)
             button_y = ButtonY
             button_color = 'WHITE'
 
             if button_x <= mouse_x <= button_x + ButtonWidth and button_y <= mouse_y <= button_y + ButtonHeight:
+                curHoverOn = i
                 button_color = (144, 238, 144) # Màu xanh lục nhạt
             
             pygame.draw.rect(Config.screen, 'BLACK', (button_x - 2, button_y - 2, ButtonWidth + 4, ButtonHeight + 4), border_radius=15)
@@ -49,6 +56,11 @@ class ExperimentBox:
             
             id = font.render(f"{i + 1}", True, BLACK)
             Config.screen.blit(id, (ButtonX + i * (10 + ButtonWidth) + ButtonWidth / 2 - 6, ButtonY + 5))
+        
+        if curHoverOn != prevHoverOn:
+            prevHoverOn = curHoverOn
+            if curHoverOn != None:
+                Sounds.hover_sound.play()
 
         pygame.display.flip()
 
@@ -63,11 +75,11 @@ class ExperimentBox:
                     Config.running = False
                     return -1 # quit level ssignal
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # 1 là chuột trái
-                print("Chuột trái được nhấn!")
                 for i in range(5):
                     button_x = ButtonX + i * (10 + ButtonWidth)
                     button_y = ButtonY
                     if button_x <= mouse_x <= button_x + ButtonWidth and button_y <= mouse_y <= button_y + ButtonHeight:
+                        Sounds.click_sound.play()
                         return i
         
         return None

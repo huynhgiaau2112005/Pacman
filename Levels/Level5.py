@@ -14,6 +14,9 @@ isSettingPos = True
 EntityNames = ["Pacman", "BlueGhost", "PinkGhost", "OrangeGhost", "RedGhost"]
 EntityBeingSetIndex = 0
 
+prevHoverOn = None
+curHoverOn = None
+
 class Level5:
     def __init__(self):
         pass
@@ -136,11 +139,13 @@ class Level5:
                         return
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
+                            Sounds.click_sound.play()
                             Sounds.ghost_move_sound.stop()
                             Sounds.dramatic_theme_music_sound.stop()
                             quit = True
                             return
                         if event.key == pygame.K_q:
+                            Sounds.click_sound.play()
                             Sounds.ghost_move_sound.stop()
                             Sounds.dramatic_theme_music_sound.stop()
                             Config.running = False
@@ -162,36 +167,37 @@ class Level5:
                                     or Board.initMaze[x][y] > 2:
                                         continue
                                     if x * px < mouse_x < (x + 1) * px and y * py < mouse_y < (y + 1) * py:
-                                            if entityName == "Pacman":
-                                                (realX, realY) = Entity.getRealCoordinates((x, y), Object.PACMAN_SIZE)
-                                                Object.pacmanX, Object.pacmanY = x, y
-                                                Object.realPacmanX, Object.realPacmanY = realX, realY
-                                                Board.coordinates[x][y] = Board.PACMAN
-                                                EntityBeingSetIndex += 1
-                                            elif entityName == "BlueGhost":
-                                                (realX, realY) = Entity.getRealCoordinates((x, y), Object.BLUE_GHOST_SIZE)
-                                                Object.blueGhostX, Object.blueGhostY = x, y
-                                                Object.realBlueGhostX, Object.realBlueGhostY = realX, realY
-                                                Board.coordinates[x][y] = Board.BLUE_GHOST
-                                                EntityBeingSetIndex += 1
-                                            elif entityName == "PinkGhost":
-                                                (realX, realY) = Entity.getRealCoordinates((x, y), Object.PINK_GHOST_SIZE)
-                                                Object.pinkGhostX, Object.pinkGhostY = x, y
-                                                Object.realPinkGhostX, Object.realPinkGhostY = realX, realY
-                                                Board.coordinates[x][y] = Board.PINK_GHOST
-                                                EntityBeingSetIndex += 1
-                                            elif entityName == "OrangeGhost":
-                                                (realX, realY) = Entity.getRealCoordinates((x, y), Object.ORANGE_GHOST_SIZE)
-                                                Object.orangeGhostX, Object.orangeGhostY = x, y
-                                                Object.realOrangeGhostX, Object.realOrangeGhostY = realX, realY
-                                                Board.coordinates[x][y] = Board.ORANGE_GHOST
-                                                EntityBeingSetIndex += 1
-                                            elif entityName == "RedGhost":
-                                                (realX, realY) = Entity.getRealCoordinates((x, y), Object.RED_GHOST_SIZE)
-                                                Object.redGhostX, Object.redGhostY = x, y
-                                                Object.realRedGhostX, Object.realRedGhostY = realX, realY
-                                                Board.coordinates[x][y] = Board.RED_GHOST
-                                                EntityBeingSetIndex += 1
+                                        Sounds.click_sound.play()
+                                        if entityName == "Pacman":
+                                            (realX, realY) = Entity.getRealCoordinates((x, y), Object.PACMAN_SIZE)
+                                            Object.pacmanX, Object.pacmanY = x, y
+                                            Object.realPacmanX, Object.realPacmanY = realX, realY
+                                            Board.coordinates[x][y] = Board.PACMAN
+                                            EntityBeingSetIndex += 1
+                                        elif entityName == "BlueGhost":
+                                            (realX, realY) = Entity.getRealCoordinates((x, y), Object.BLUE_GHOST_SIZE)
+                                            Object.blueGhostX, Object.blueGhostY = x, y
+                                            Object.realBlueGhostX, Object.realBlueGhostY = realX, realY
+                                            Board.coordinates[x][y] = Board.BLUE_GHOST
+                                            EntityBeingSetIndex += 1
+                                        elif entityName == "PinkGhost":
+                                            (realX, realY) = Entity.getRealCoordinates((x, y), Object.PINK_GHOST_SIZE)
+                                            Object.pinkGhostX, Object.pinkGhostY = x, y
+                                            Object.realPinkGhostX, Object.realPinkGhostY = realX, realY
+                                            Board.coordinates[x][y] = Board.PINK_GHOST
+                                            EntityBeingSetIndex += 1
+                                        elif entityName == "OrangeGhost":
+                                            (realX, realY) = Entity.getRealCoordinates((x, y), Object.ORANGE_GHOST_SIZE)
+                                            Object.orangeGhostX, Object.orangeGhostY = x, y
+                                            Object.realOrangeGhostX, Object.realOrangeGhostY = realX, realY
+                                            Board.coordinates[x][y] = Board.ORANGE_GHOST
+                                            EntityBeingSetIndex += 1
+                                        elif entityName == "RedGhost":
+                                            (realX, realY) = Entity.getRealCoordinates((x, y), Object.RED_GHOST_SIZE)
+                                            Object.redGhostX, Object.redGhostY = x, y
+                                            Object.realRedGhostX, Object.realRedGhostY = realX, realY
+                                            Board.coordinates[x][y] = Board.RED_GHOST
+                                            EntityBeingSetIndex += 1
                 EM().maze.draw()
             
                 if isSettingPos:
@@ -254,6 +260,9 @@ class Level5:
         Sounds.ghost_move_sound.stop()
         Sounds.dramatic_theme_music_sound.stop()
 
+        Sounds.win_sound.set_volume(0.5)
+        Sounds.win_sound.play()
+        
         # Hướng dẫn phím tắt
         font = pygame.font.Font(None, 30)
         shortkey = font.render("ESC: Menu  Q: Quit", True, (255, 255, 255))
@@ -291,9 +300,11 @@ class Level5:
                     return
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        Sounds.click_sound.play()
                         quit = True
                         return
                     if event.key == pygame.K_q:
+                        Sounds.click_sound.play()
                         Config.running = False
                         return
                     if event.key == pygame.K_SPACE:
@@ -319,21 +330,36 @@ class Level5:
             Config.screen.blit(finish_text, finish_text_rect)
 
             # Vẽ nút
+            global prevHoverOn, curHoverOn
+            curHoverOn = None
+
             for text, x, y, w, h in buttons:
                 is_hovered = x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2
-                color = color_hover if is_hovered else color_button  # Đổi màu khi hover
+                color = color_button
                 
+                if is_hovered:
+                    color = color_hover
+                    curHoverOn = text
+
                 pygame.draw.rect(Config.screen, color, (x - w // 2, y - h // 2, w, h), border_radius=15)  # Nút bo góc
                 text_render = font_button.render(text, True, color_text)
                 text_rect = text_render.get_rect(center=(x, y))
                 Config.screen.blit(text_render, text_rect)  # Hiển thị chữ trên nút
+            
+            if curHoverOn != prevHoverOn:
+                prevHoverOn = curHoverOn
+                if curHoverOn:
+                    Sounds.hover_sound.play()
 
             if ClickOnButton == "Again":
+                Sounds.click_sound.play()
                 return
             elif ClickOnButton == "Menu":
+                Sounds.click_sound.play()
                 quit = True
                 return
             elif ClickOnButton == "Quit":
+                Sounds.click_sound.play()
                 Config.running = False
                 return
             

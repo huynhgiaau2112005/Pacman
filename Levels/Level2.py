@@ -93,11 +93,13 @@ class Level2:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             ghost_move_sound.stop()
+                            Sounds.click_sound.play()
                             Sounds.dramatic_theme_music_sound.stop()
                             quit = True
                             return
                         if event.key == pygame.K_q:
                             ghost_move_sound.stop()
+                            Sounds.click_sound.play()
                             Sounds.dramatic_theme_music_sound.stop()
                             Config.running = False
                             return
@@ -142,7 +144,9 @@ class Level2:
                 pygame.display.flip()
                 clock.tick(Config.fps)
                 countFrames += 1
-                
+            
+            Sounds.lose_sound.play()
+
             start = False
 
             algorithm = "IDS"

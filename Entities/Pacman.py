@@ -1,5 +1,5 @@
 from .Entity import Entity
-from Config import Config, Material, Object, Board, Mode
+from Config import Config, Material, Object, Board, Mode, Sounds
 import pygame
 
 class Pacman(Entity):
@@ -102,6 +102,8 @@ class Pacman(Entity):
     
   def move(self):
     x, y = Object.pacmanX, Object.pacmanY
+    if Board.maze[x][y] in (1, 2):
+      Sounds.pacman_eat_dot_sound.set_volume(0.3)
     targetX, targetY = Entity.getRealCoordinates((x, y), Object.PACMAN_SIZE) 
     realX, realY = Object.realPacmanX, Object.realPacmanY
 
@@ -144,19 +146,23 @@ class Pacman(Entity):
         Board.maze[oldX][oldY] = 0
         Config.score += 10
         Config.normalDots -= 1
-      if Board.maze[oldX][oldY] == 2: # powerup dot
+
+      elif Board.maze[oldX][oldY] == 2: # powerup dot
         Board.maze[oldX][oldY] = 0
         Config.score += 20
         Config.powerupDots -= 1
         Mode.mode = Mode.POWER_UP
-        Mode.powerupTime = Mode.powerupTimeLimit  
+        Mode.powerupTime += Mode.powerupTimeLimit  
         Mode.BlueGhost = Mode.POWER_UP if Mode.BlueGhost != Mode.DEAD else Mode.DEAD    
         Mode.PinkGhost = Mode.POWER_UP if Mode.PinkGhost != Mode.DEAD else Mode.DEAD       
         Mode.RedGhost = Mode.POWER_UP if Mode.RedGhost != Mode.DEAD else Mode.DEAD   
         Mode.OrangeGhost = Mode.POWER_UP  if Mode.OrangeGhost != Mode.DEAD else Mode.DEAD    
 
+      elif Board.maze[oldX][oldY] == 0:
+        Sounds.pacman_eat_dot_sound.set_volume(0)
+        
       targetPos = self.getTargetPos()
-      
+    
       if targetPos:
           targetX, targetY = targetPos
           newX, newY = oldX, oldY

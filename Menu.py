@@ -1,5 +1,5 @@
 from Levels import *
-from Config import Config
+from Config import Config, Sounds
 import pygame
 
 backgroundPath = "Assets/background_menu.jpg"
@@ -32,6 +32,9 @@ LIGHT_RED = (255, 50, 50)
 BLACK = (0, 0, 0)
 LIGHT_GREEN = (144, 238, 144)  # Màu xanh nhạt (Light Green)
 
+prevHoverOn = None
+curHoverOn = None
+
 class Menu:
   def drawBackground(self):
     background = pygame.image.load(backgroundPath)
@@ -48,6 +51,8 @@ class Menu:
   def drawLevelButtons(self):
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
+    global curHoverOn, prevHoverOn
+
     for x, y, width, height, text, level in buttons:
         color = LIGHT_GREEN
         default_color = WHITE
@@ -56,6 +61,7 @@ class Menu:
 
         # Kiểm tra chuột có hover vào nút Level không
         if x <= mouse_x <= x + width and y <= mouse_y <= y + height:
+          curHoverOn = text
           pygame.draw.rect(Config.screen, LIGHT_GREEN, (x - 2.5, y - 2.5, width + 5, height + 5), border_radius=15)
           text_size = 40
         else:
@@ -72,8 +78,11 @@ class Menu:
   def drawExitButton(self):
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
+    global curHoverOn, prevHoverOn
+
     # Vẽ nút Exit
     if exitButtonX <= mouse_x <= exitButtonX + exitButtonWidth and 650 <= mouse_y <= 650 + exitButtonHeight:
+      curHoverOn = "Exit"
       pygame.draw.rect(Config.screen, LIGHT_RED, (exitButtonX, exitButtonY, exitButtonWidth, exitButtonHeight), border_radius=15)
     else:
       pygame.draw.rect(Config.screen, RED, (exitButtonX, exitButtonY, exitButtonWidth, exitButtonHeight), border_radius=15)
@@ -88,12 +97,21 @@ class Menu:
     Config.screen.blit(text_surface, (text_x, text_y))
 
   def execute(self):
+    global curHoverOn, prevHoverOn
+
     while Config.running:
       Config.screen.fill(WHITE)
       self.drawBackground()
 
+      curHoverOn = None
+
       self.drawLevelButtons()
       self.drawExitButton()
+
+      if curHoverOn != prevHoverOn:
+        prevHoverOn = curHoverOn
+        if curHoverOn != None:
+          Sounds.hover_sound.play()
 
       pygame.display.flip()
       
@@ -106,9 +124,12 @@ class Menu:
             # Nếu click vào nút Levels
             for x, y, width, height, text, level in buttons:
               if x <= mouse_x <= x + width and y <= mouse_y <= y + height:
+                Sounds.click_sound.play()
+                Sounds.beginning_game_sound.stop()
                 level.execute()
             # Nếu click Exit
             if exitButtonX <= mouse_x <= exitButtonX + exitButtonWidth and 650 <= mouse_y <= 650 + exitButtonHeight:
+              Sounds.click_sound.play()
               Config.running = False
               
 

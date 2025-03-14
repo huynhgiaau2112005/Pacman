@@ -3,6 +3,7 @@ from EntitiesManager import EntitiesManager as EM
 from Config import Config, Object, Sounds, Board, Mode
 import time
 import random
+import math
 import pygame
 
 start = False
@@ -13,11 +14,14 @@ countFrames = 0
 
 ClickOnButton = None
 
+prevHoverOn = None
+curHoverOn = None
+
 setUpCoordinates = {
     'blueGhost': (14, 12),
     'pinkGhost': (16, 12),
-    'orangeGhost': (16, 17),
-    'redGhost': (14, 17),
+    'orangeGhost': (14, 17),
+    'redGhost': (16, 17),
     'pacman': (24, 14)
 }
 availableNodes = [(21, 16), (27, 4), (27, 13), (14, 13), (2, 2), (6, 2), (15, 14), (16, 13), (18, 10), (18, 19), (30, 2), (14, 15), (9, 10), (9, 19), (24, 10), (15, 7), (24, 19), (15, 16), (6, 13), (16, 15), (21, 2), (14, 17), (30, 13), (15, 0), (16, 17), (2, 27), (12, 13), (6, 27), (27, 22), (30, 27), (12, 15), (14, 12), (21, 27), (9, 7), (9, 16), (24, 7), (24, 16), (15, 13), (2, 13), (16, 12), (24, 25), (2, 22), (6, 22), (14, 14), (16, 14), (21, 13), (12, 10), (21, 22), (9, 2), (12, 19), (14, 16), (27, 10), (24, 2), (27, 19), (16, 16), (15, 29), (24, 4), (6, 10), (15, 22), (6, 19), (12, 14), (9, 27), (15, 15), (21, 10), (24, 27), (21, 19), (12, 16), (27, 7), (27, 16), (27, 25), (15, 17), (9, 13), (27, 27), (2, 7), (9, 22), (2, 16), (24, 13), (15, 10), (6, 7), (24, 22), (15, 19), (6, 16), (27, 2), (30, 16), (15, 12), (21, 7)]
@@ -85,6 +89,33 @@ class Level6:
                                   (Object.redGhostX, Object.redGhostY), \
                                   (Object.pacmanX, Object.pacmanY)):
                     Board.coordinates[i][j] = Board.BLANK
+    
+    def get_volume(self, ghost, pacman, max_distance=15):
+        ghost_x, ghost_y = ghost
+        pac_x, pac_y = pacman
+        distance = math.sqrt((ghost_x - pac_x) ** 2 + (ghost_y - pac_y) ** 2)  
+        volume = max(0.0, 1 - (distance / max_distance))  # 0.1 là âm lượng nhỏ nhất, 1 là lớn nhất
+        return min(1.0, max(0.0, volume))  # Giới hạn từ 0.0 đến 1.0
+
+    def set_volume(self):
+        normal_move_volume = 0
+        powerup_move_volume = 0
+        ghosts = [(Object.blueGhostX, Object.blueGhostY), \
+            (Object.pinkGhostX, Object.pinkGhostY), \
+            (Object.orangeGhostX, Object.orangeGhostY), \
+            (Object.redGhostX, Object.redGhostY)]
+        modes = [Mode.BlueGhost, Mode.PinkGhost, Mode.OrangeGhost, Mode.RedGhost]
+        pacman = (Object.pacmanX, Object.pacmanY)
+
+        for i in range(len(ghosts)):
+            volume = self.get_volume(ghosts[i], pacman)
+            if modes[i] == Mode.CHASING:
+                normal_move_volume = max(normal_move_volume, volume)
+            elif modes[i] == Mode.POWER_UP:
+                powerup_move_volume = max(powerup_move_volume, volume)
+        
+        Sounds.ghost_move_sound.set_volume(normal_move_volume)
+        Sounds.ghost_move_powerup_sound.set_volume(powerup_move_volume)
 
     def isCaught(self):
         pacmanPos = (Object.pacmanX, Object.pacmanY)
@@ -156,34 +187,38 @@ class Level6:
             if countFrames % 60 * 2 == 0:
                 self.setTargetPosPowerUp()
             if countFrames % 15 == 0:
-                if Mode.PinkGhost == Mode.POWER_UP:
-                    EM().pinkGhost.updatePosPowerUp(TargetPosInPowerUp["pinkGhost"])
-                if Mode.OrangeGhost == Mode.POWER_UP and countFrames > 60 * 5:
-                    EM().orangeGhost.updatePosPowerUp(TargetPosInPowerUp["orangeGhost"])
-                if Mode.BlueGhost == Mode.POWER_UP and countFrames > 60 * 10:
+                if Mode.BlueGhost == Mode.POWER_UP:
                     EM().blueGhost.updatePosPowerUp(TargetPosInPowerUp["blueGhost"])
+                if Mode.PinkGhost == Mode.POWER_UP and countFrames > 60 * 5:
+                    EM().pinkGhost.updatePosPowerUp(TargetPosInPowerUp["pinkGhost"])
+                if Mode.OrangeGhost == Mode.POWER_UP and countFrames > 60 * 10:
+                    EM().orangeGhost.updatePosPowerUp(TargetPosInPowerUp["orangeGhost"])
                 if Mode.RedGhost == Mode.POWER_UP and countFrames > 60 * 15:
                     EM().redGhost.updatePosPowerUp(TargetPosInPowerUp["redGhost"])
 
                 pacmanPos = (Object.realPacmanX, Object.realPacmanY)
-                pinkGhostPos = (Object.realPinkGhostX, Object.realPinkGhostY)
                 blueGhostPos = (Object.realBlueGhostX, Object.realBlueGhostY)
+                pinkGhostPos = (Object.realPinkGhostX, Object.realPinkGhostY)
                 orangeGhostPos = (Object.realOrangeGhostX, Object.realOrangeGhostY)
                 redGhostPos = (Object.realRedGhostX, Object.realRedGhostY)
 
-                if Mode.PinkGhost == Mode.POWER_UP and isHit(pinkGhostPos, pacmanPos):
-                    (Object.realPinkGhostX, Object.realPinkGhostY) = Entity.getRealCoordinates((Object.pinkGhostX, Object.pinkGhostY), Object.PINK_GHOST_SIZE)
-                    Mode.PinkGhost = Mode.DEAD
-                    Config.score += 50
                 if Mode.BlueGhost == Mode.POWER_UP and isHit(blueGhostPos, pacmanPos):
+                    Sounds.pacman_eat_ghost_sound.play()
                     (Object.realBlueGhostX, Object.realBlueGhostY) = Entity.getRealCoordinates((Object.blueGhostX, Object.blueGhostY), Object.BLUE_GHOST_SIZE)
                     Mode.BlueGhost = Mode.DEAD
                     Config.score += 50
+                if Mode.PinkGhost == Mode.POWER_UP and isHit(pinkGhostPos, pacmanPos):
+                    Sounds.pacman_eat_ghost_sound.play()
+                    (Object.realPinkGhostX, Object.realPinkGhostY) = Entity.getRealCoordinates((Object.pinkGhostX, Object.pinkGhostY), Object.PINK_GHOST_SIZE)
+                    Mode.PinkGhost = Mode.DEAD
+                    Config.score += 50
                 if Mode.OrangeGhost == Mode.POWER_UP and isHit(orangeGhostPos, pacmanPos):
+                    Sounds.pacman_eat_ghost_sound.play()
                     (Object.realOrangeGhostX, Object.realOrangeGhostY) = Entity.getRealCoordinates((Object.orangeGhostX, Object.orangeGhostY), Object.ORANGE_GHOST_SIZE)
                     Mode.OrangeGhost = Mode.DEAD
                     Config.score += 50
                 if Mode.RedGhost == Mode.POWER_UP and isHit(redGhostPos, pacmanPos):
+                    Sounds.pacman_eat_ghost_sound.play()
                     (Object.realRedGhostX, Object.realRedGhostY) = Entity.getRealCoordinates((Object.redGhostX, Object.redGhostY), Object.RED_GHOST_SIZE)
                     Mode.RedGhost = Mode.DEAD
                     Config.score += 50
@@ -259,30 +294,39 @@ class Level6:
             
             Sounds.dramatic_theme_music_sound.set_volume(0.1)
             Sounds.dramatic_theme_music_sound.play(loops=-1)
+            Sounds.ghost_move_powerup_sound.play(loops=-1).set_volume(0)
 
             while Config.running and not quit:
                 Config.screen.fill('black')
                 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        Sounds.ghost_move_powerup_sound.stop()
                         Sounds.ghost_move_sound.stop()
                         Sounds.dramatic_theme_music_sound.stop()
                         Config.running = False
                         return
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
+                            Sounds.click_sound.play()
+                            Sounds.pacman_eat_dot_sound.stop()
+                            Sounds.ghost_move_powerup_sound.stop()
                             Sounds.ghost_move_sound.stop()
                             Sounds.dramatic_theme_music_sound.stop()
                             quit = True
                             return
                         if event.key == pygame.K_q:
+                            Sounds.click_sound.play()
+                            Sounds.ghost_move_powerup_sound.stop()
                             Sounds.ghost_move_sound.stop()
                             Sounds.dramatic_theme_music_sound.stop()
                             Config.running = False
                             return
                         if event.key == pygame.K_SPACE:
                             if not start:
+                                Sounds.pacman_eat_dot_sound.play(loops=-1)
                                 Sounds.ghost_move_sound.play(loops=-1)  # Lặp vô hạn
+                                Sounds.ghost_move_powerup_sound.play(loops=-1)
                                 start = True
                         if event.key == pygame.K_UP:
                             Config.KeyMovePacman = pygame.K_UP
@@ -328,6 +372,7 @@ class Level6:
                     Mode.OrangeGhost = Mode.CHASING if Mode.OrangeGhost != Mode.DEAD else Mode.DEAD
                     Mode.RedGhost = Mode.CHASING if Mode.RedGhost != Mode.DEAD else Mode.DEAD
 
+                self.set_volume()
                 self.ghostChasingMode()
                 self.powerupMode()
 
@@ -347,6 +392,8 @@ class Level6:
                     
                 if PacmanGetCaught and not self.isLost():
                     #Sounds.dramatic_theme_music_sound.stop()
+                    Sounds.pacman_eat_dot_sound.stop()
+                    Sounds.ghost_move_powerup_sound.stop()
                     Sounds.ghost_move_sound.stop()
                     #Sounds.pacman_death()
                     time.sleep(1.5)
@@ -354,6 +401,9 @@ class Level6:
                     continue
                 
                 if self.isWin() or self.isLost():
+                    Sounds.pacman_eat_dot_sound.stop()
+                    Sounds.ghost_move_powerup_sound.stop()
+                    Sounds.ghost_move_sound.stop()
                     break
                 
             if self.isWin():
@@ -365,7 +415,9 @@ class Level6:
     
     def lose(self):
         global quit, ClickOnButton
-
+        
+        Sounds.lose_sound.play()
+        
         clock = pygame.time.Clock()
         last_tick = pygame.time.get_ticks()
 
@@ -383,7 +435,7 @@ class Level6:
         color_button = (255, 255, 255)  # Màu nền nút trắng
         color_hover = (144, 238, 144)  # Màu hover xanh nhạt
 
-        # Chữ YOU LOST
+        # Chữ YOU LOSE
         font_big = pygame.font.Font(None, 150)  # Chọn font, 150px là kích thước chữ
         you_lose_text = font_big.render("YOU LOSE", True, (255, 0, 0))  # Chữ đỏ
         you_lose_text_rect = you_lose_text.get_rect(center=(400, 800 * 1 // 4))  # Căn giữa, y = 2/3 chiều cao màn hình
@@ -414,9 +466,11 @@ class Level6:
                     return
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        Sounds.click_sound.play()
                         quit = True
                         return
                     if event.key == pygame.K_q:
+                        Sounds.click_sound.play()
                         Config.running = False
                         return
                     if event.key == pygame.K_SPACE:
@@ -445,21 +499,36 @@ class Level6:
             Config.screen.blit(text_score, text_score_rect)
 
             # Vẽ nút
+            global prevHoverOn, curHoverOn
+            curHoverOn = None
+
             for text, x, y, w, h in buttons:
                 is_hovered = x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2
-                color = color_hover if is_hovered else color_button  # Đổi màu khi hover
+                color = color_button
                 
+                if is_hovered:
+                    color = color_hover
+                    curHoverOn = text
+
                 pygame.draw.rect(Config.screen, color, (x - w // 2, y - h // 2, w, h), border_radius=15)  # Nút bo góc
                 text_render = font_button.render(text, True, color_text)
                 text_rect = text_render.get_rect(center=(x, y))
                 Config.screen.blit(text_render, text_rect)  # Hiển thị chữ trên nút
+            
+            if curHoverOn != prevHoverOn:
+                prevHoverOn = curHoverOn
+                if curHoverOn:
+                    Sounds.hover_sound.play()
 
             if ClickOnButton == "Play Again":
+                Sounds.click_sound.play()
                 return
             elif ClickOnButton == "Menu":
+                Sounds.click_sound.play()
                 quit = True
                 return
             elif ClickOnButton == "Quit":
+                Sounds.click_sound.play()
                 Config.running = False
                 return
 
@@ -470,6 +539,9 @@ class Level6:
     
     def win(self):
         global quit, ClickOnButton
+
+        Sounds.win_sound.set_volume(0.5)
+        Sounds.win_sound.play()
 
         clock = pygame.time.Clock()
         last_tick = pygame.time.get_ticks()
@@ -519,9 +591,11 @@ class Level6:
                     return
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        Sounds.click_sound.play()
                         quit = True
                         return
                     if event.key == pygame.K_q:
+                        Sounds.click_sound.play()
                         Config.running = False
                         return
                     if event.key == pygame.K_SPACE:
@@ -550,21 +624,36 @@ class Level6:
             Config.screen.blit(text_score, text_score_rect)
 
             # Vẽ nút
+            global prevHoverOn, curHoverOn
+            curHoverOn = None
+
             for text, x, y, w, h in buttons:
                 is_hovered = x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2
-                color = color_hover if is_hovered else color_button  # Đổi màu khi hover
+                color = color_button
                 
+                if is_hovered:
+                    color = color_hover
+                    curHoverOn = text
+
                 pygame.draw.rect(Config.screen, color, (x - w // 2, y - h // 2, w, h), border_radius=15)  # Nút bo góc
                 text_render = font_button.render(text, True, color_text)
                 text_rect = text_render.get_rect(center=(x, y))
                 Config.screen.blit(text_render, text_rect)  # Hiển thị chữ trên nút
+            
+            if curHoverOn != prevHoverOn:
+                prevHoverOn = curHoverOn
+                if curHoverOn:
+                    Sounds.hover_sound.play()
 
             if ClickOnButton == "Play Again":
+                Sounds.click_sound.play()
                 return
             elif ClickOnButton == "Menu":
+                Sounds.click_sound.play()
                 quit = True
                 return
             elif ClickOnButton == "Quit":
+                Sounds.click_sound.play()
                 Config.running = False
                 return
             
