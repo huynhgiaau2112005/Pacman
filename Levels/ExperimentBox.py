@@ -25,8 +25,8 @@ class ExperimentBox:
         pygame.draw.rect(Config.screen, (255, 153, 51), (boxX, boxY, BoxWidth, BoxHeight), border_radius=15)
 
         algorithm_text = font.render(f"Algorithm: {algorithm}", True, BLACK)
-        search_time_text = font.render(f"Search time: {search_time:.6f} seconds", True, BLACK)
-        memory_usage_text = font.render(f"Memory usage: {memory_usage:.6f} MB", True, BLACK)
+        search_time_text = font.render(f"Search time: {search_time * 1000:.4f} miliseconds", True, BLACK)
+        memory_usage_text = font.render(f"Memory usage: {memory_usage * 1024:.4f} KB", True, BLACK)
         num_expanded_nodes_text = font.render(f"Number of expanded nodes : {num_expanded_nodes}", True, BLACK)
         pick_testcase_text = font.render("Pick next testcase", True, BLACK)
             

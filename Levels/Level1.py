@@ -10,10 +10,10 @@ import math
 
 # testcases: (ghost, pacman)
 testcases = [((16, 13), (24, 14)),
-             ((6, 2), (24, 26)),
-             ((30, 27), (4, 2)),
+             ((21, 3), (15, 21)), 
              ((27, 3), (29, 27)),
-             ((21, 3), (15, 21))]
+             ((6, 2), (24, 26)), 
+             ((30, 27), (4, 2))]
 testcaseID = 0
 
 quit = False
@@ -155,6 +155,10 @@ class Level1:
             memory_usage = peak / (2 ** 20)
             num_expanded_nodes = expanded_nodes
             
+            print(search_time * 1000)
+            print(memory_usage * 1024)
+            print(num_expanded_nodes)
+
             Config.screen.blit(shortkey, (580, 800 - 30))   
             
             while Config.running:
