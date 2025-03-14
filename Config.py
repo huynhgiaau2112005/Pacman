@@ -76,6 +76,7 @@ class Color:
   color_text = 'white'
 
 class Material:
+  iconImage = pygame.image.load("Assets/icon.png")
   BlueGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/blue.png"), (Object.BLUE_GHOST_SIZE, Object.BLUE_GHOST_SIZE))
   RedGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/red.png"), (Object.RED_GHOST_SIZE, Object.RED_GHOST_SIZE))
   PinkGhostImage = pygame.transform.scale(pygame.image.load("Assets/ghost_images/pink.png"), (Object.PINK_GHOST_SIZE, Object.PINK_GHOST_SIZE))
