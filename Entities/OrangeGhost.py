@@ -66,7 +66,6 @@ class OrangeGhost(GhostInterface):
             (f, x, y, path) = heapq.heappop(heap)
             visited.add((x, y))
             
-            #print(Board.coordinates[int(x)][int(y)])
             if Board.coordinates[int(x)][int(y)] == Board.PACMAN or len(path) == PATH_LIMIT:
                 return path[0]   
             
@@ -80,9 +79,9 @@ class OrangeGhost(GhostInterface):
                     ny += dy          
                     
                 if (nx, ny) not in visited and self.isValidPos(nx, ny)\
-                    and Board.coordinates[nx][ny] != Board.PINK_GHOST \
-                    and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
-                    and Board.coordinates[nx][ny] != Board.RED_GHOST: #check collision::
+                    and (nx, ny) != (Object.pinkGhostX, Object.pinkGhostY) \
+                    and (nx, ny) != (Object.blueGhostX, Object.blueGhostY) \
+                    and (nx, ny) != (Object.redGhostX, Object.redGhostY): #check collision::
                     heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + [(nx, ny)]))
                 
         return None
@@ -123,9 +122,9 @@ class OrangeGhost(GhostInterface):
                     return path + subpath, len(visited)
                     
                 if (nx, ny) not in visited and self.isValidPos(nx, ny)\
-                    and Board.coordinates[nx][ny] != Board.PINK_GHOST \
-                    and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
-                    and Board.coordinates[nx][ny] != Board.RED_GHOST: #check collision::
+                    and (nx, ny) != (Object.pinkGhostX, Object.pinkGhostY) \
+                    and (nx, ny) != (Object.blueGhostX, Object.blueGhostY) \
+                    and (nx, ny) != (Object.redGhostX, Object.redGhostY):  #check collision::
                     heapq.heappush(heap, (f + abs(nx - x) + abs(ny - y), nx, ny, path + subpath))
                 
         return None, len(visited)
@@ -229,7 +228,6 @@ class OrangeGhost(GhostInterface):
                 while (ghost_x, ghost_y) != ghost:
                     path.append((ghost_x, ghost_y))
                     (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                #path.append((ghost_x, ghost_y))
                 path = path[::-1]
                 return path[0]
 

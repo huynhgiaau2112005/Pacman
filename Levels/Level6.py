@@ -44,7 +44,7 @@ class Level6:
     def setup(self):
         global PacmanGetCaught, quit, start, countFrames
         global BlueGhostStatus, PinkGhostStatus, OrangeGhostStatus, RedGhostStatus
-
+        
         countFrames = 0
         PacmanGetCaught = False
         quit = False
@@ -298,7 +298,7 @@ class Level6:
 
             while Config.running and not quit:
                 Config.screen.fill('black')
-                
+
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         Sounds.ghost_move_powerup_sound.stop()
@@ -391,6 +391,7 @@ class Level6:
                     Mode.powerupTime -= 1 if Mode.powerupTime > 0 else 0
                     
                 if PacmanGetCaught and not self.isLost():
+                    Sounds.lose_sound.play()
                     #Sounds.dramatic_theme_music_sound.stop()
                     Sounds.pacman_eat_dot_sound.stop()
                     Sounds.ghost_move_powerup_sound.stop()
@@ -473,8 +474,6 @@ class Level6:
                         Sounds.click_sound.play()
                         Config.running = False
                         return
-                    if event.key == pygame.K_SPACE:
-                        print("space is pressed when win")
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     for text, x, y, w, h in buttons:
                         if x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2:
@@ -598,8 +597,6 @@ class Level6:
                         Sounds.click_sound.play()
                         Config.running = False
                         return
-                    if event.key == pygame.K_SPACE:
-                        print("space is pressed when win")
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     for text, x, y, w, h in buttons:
                         if x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2:

@@ -58,10 +58,9 @@ class PinkGhost(GhostInterface):
             depths = {ghost: 0}  
             parent = {ghost : None}
 
-            while stack:# is not None or count_depth == depth_limit:
+            while stack:
                 (ghost_x, ghost_y) = stack.pop()
                 depth = depths[(ghost_x, ghost_y)]
-                #print((depth_limit, (ghost_x, ghost_y), depth))
 
                 #Neu gap pacman
                 if (ghost_x, ghost_y) == pacman:
@@ -69,7 +68,6 @@ class PinkGhost(GhostInterface):
                     while (ghost_x, ghost_y) != ghost:
                         path.append((ghost_x, ghost_y))
                         (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                    #path.append((ghost_x, ghost_y))
                     path = path[::-1]
                     return path[0] 
                 
@@ -79,14 +77,14 @@ class PinkGhost(GhostInterface):
                         go_y = ghost_y + y
 
                         if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and ((go_x, go_y) not in visited or depth + 1 < depths[(go_x, go_y)]):
-                            if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9\
-                                and Board.coordinates[go_x][go_y] != Board.ORANGE_GHOST \
-                                and Board.coordinates[go_x][go_y] != Board.BLUE_GHOST \
-                                and Board.coordinates[go_x][go_y] != Board.RED_GHOST: #check collision:
-                                stack.append((go_x, go_y))
-                                visited.add((go_x, go_y))
-                                depths[(go_x, go_y)] = depth + 1
-                                parent[(go_x, go_y)] = (ghost_x, ghost_y)
+                            if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9)\
+                                and (go_x, go_y) != (Object.blueGhostX, Object.blueGhostY) \
+                                and (go_x, go_y) != (Object.orangeGhostX, Object.orangeGhostY) \
+                                and (go_x, go_y) != (Object.redGhostX, Object.redGhostY):  #check collision::
+                                    stack.append((go_x, go_y))
+                                    visited.add((go_x, go_y))
+                                    depths[(go_x, go_y)] = depth + 1
+                                    parent[(go_x, go_y)] = (ghost_x, ghost_y)
 
                                    
                 else: visited.discard((ghost_x, ghost_y))
@@ -107,11 +105,10 @@ class PinkGhost(GhostInterface):
             depths = {ghost: 0}  
             parent = {ghost : None}
 
-            while stack:# is not None or count_depth == depth_limit:
+            while stack:
                 (ghost_x, ghost_y) = stack.pop()
                 expanded_nodes += 1
                 depth = depths[(ghost_x, ghost_y)]
-                #print((depth_limit, (ghost_x, ghost_y), depth))
 
                 #Neu gap pacman
                 if (ghost_x, ghost_y) == pacman:
@@ -119,7 +116,6 @@ class PinkGhost(GhostInterface):
                     while (ghost_x, ghost_y) != ghost:
                         path.append((ghost_x, ghost_y))
                         (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                    #path.append((ghost_x, ghost_y))
                     path = path[::-1]
                     return path, expanded_nodes
 
@@ -129,10 +125,10 @@ class PinkGhost(GhostInterface):
                         go_y = ghost_y + y
 
                         if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and ((go_x, go_y) not in visited or depth + 1 < depths[(go_x, go_y)]):
-                            if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9\
-                                and Board.coordinates[go_x][go_y] != Board.ORANGE_GHOST \
-                                and Board.coordinates[go_x][go_y] != Board.BLUE_GHOST \
-                                and Board.coordinates[go_x][go_y] != Board.RED_GHOST: #check collision::
+                            if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9)\
+                                and (go_x, go_y) != (Object.blueGhostX, Object.blueGhostY) \
+                                and (go_x, go_y) != (Object.orangeGhostX, Object.orangeGhostY) \
+                                and (go_x, go_y) != (Object.redGhostX, Object.redGhostY):  #check collision::
                                 stack.append((go_x, go_y))
                                 visited.add((go_x, go_y))
                                 depths[(go_x, go_y)] = depth + 1
@@ -202,7 +198,7 @@ class PinkGhost(GhostInterface):
                         go_y = ghost_y + y
 
                         if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS and ((go_x, go_y) not in visited or depth + 1 < depths[(go_x, go_y)]):
-                            if 0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9\
+                            if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9)\
                                 and (go_x, go_y) != (Object.orangeGhostX, Object.orangeGhostY) \
                                 and (go_x, go_y) != (Object.blueGhostX, Object.blueGhostY) \
                                 and (go_x, go_y) != (Object.redGhostX, Object.redGhostY) \

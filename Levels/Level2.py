@@ -13,7 +13,6 @@ testcases = [((16, 13), (24, 14)),
              ((6, 2), (24, 26)),
              ((30, 27), (4, 2)),
              ((27, 3), (29, 27)),
-             #((15, 20), (15, 21))]
              ((21, 3), (15, 21))]
 testcaseID = 0
 
@@ -25,12 +24,14 @@ class Level2:
         pass
 
     def setup(self):
-        #(Object.pinkGhostX, Object.pinkGhostY) = (16, 13) #(6, 2) (30, 27) (27, 3) (21, 3)
-        #(Object.pacmanX, Object.pacmanY) = (24, 14) #(24, 26) (4, 2) (29, 27) (15, 21)
-        
+        Board.maze = [row[:] for row in Board.initMaze]
+
         # Setup tọa độ ma trận
         Object.pinkGhostX, Object.pinkGhostY = testcases[testcaseID][0]
         Object.pacmanX, Object.pacmanY = testcases[testcaseID][1]
+        Object.blueGhostX, Object.blueGhostY = -1, -1
+        Object.redGhostX, Object.redGhostY = -1, -1
+        Object.orangeGhostX, Object.orangeGhostY = -1, -1
 
         # Setup tọa độ thực
         (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)

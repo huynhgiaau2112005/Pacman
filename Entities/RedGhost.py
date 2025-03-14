@@ -88,9 +88,9 @@ class RedGhost(GhostInterface):
                         break
 
                 if (nx, ny) not in visited and self.isValidPos(nx, ny)\
-                    and Board.coordinates[nx][ny] != Board.PINK_GHOST \
-                    and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
-                    and Board.coordinates[nx][ny] != Board.ORANGE_GHOST: #check collision:
+                    and (nx, ny) != (Object.pinkGhostX, Object.pinkGhostY) \
+                    and (nx, ny) != (Object.orangeGhostX, Object.orangeGhostY) \
+                    and (nx, ny) != (Object.blueGhostX, Object.blueGhostY):  #check collision::
                     nh = self.heuristic(nx, ny)
                     nf = f - h + nh + abs(nx - x) + abs(ny - y)
                     heapq.heappush(heap, (nf, nh, nx, ny, path + [(nx, ny)]))
@@ -131,9 +131,9 @@ class RedGhost(GhostInterface):
                         break
 
                 if (nx, ny) not in visited and self.isValidPos(nx, ny)\
-                    and Board.coordinates[nx][ny] != Board.PINK_GHOST \
-                    and Board.coordinates[nx][ny] != Board.BLUE_GHOST \
-                    and Board.coordinates[nx][ny] != Board.ORANGE_GHOST: #check collision:
+                    and (nx, ny) != (Object.pinkGhostX, Object.pinkGhostY) \
+                    and (nx, ny) != (Object.orangeGhostX, Object.orangeGhostY) \
+                    and (nx, ny) != (Object.blueGhostX, Object.blueGhostY):  #check collision::
                     nh = self.heuristic(nx, ny)
                     nf = f - h + nh + abs(nx - x) + abs(ny - y)
                     heapq.heappush(heap, (nf, nh, nx, ny, path + [(nx, ny)]))
@@ -247,7 +247,6 @@ class RedGhost(GhostInterface):
                 while (ghost_x, ghost_y) != ghost:
                     path.append((ghost_x, ghost_y))
                     (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                #path.append((ghost_x, ghost_y))
                 path = path[::-1]
                 return path[0]
 

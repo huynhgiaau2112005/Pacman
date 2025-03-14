@@ -23,7 +23,6 @@ class BlueGhost(GhostInterface):
 
     def move(self):
         x, y = Object.blueGhostX, Object.blueGhostY
-
         targetX, targetY = Entity.getRealCoordinates((x, y), Object.BLUE_GHOST_SIZE) # tọa độ thực muốn đi đến
         realX, realY = Object.realBlueGhostX, Object.realBlueGhostY # tọa độ thực hiện tại
 
@@ -61,7 +60,6 @@ class BlueGhost(GhostInterface):
                 while (ghost_x, ghost_y) != ghost:
                     path.append((ghost_x, ghost_y))
                     (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                #path.append((ghost_x, ghost_y))
                 path = path[::-1]
                 return path[0]
 
@@ -71,9 +69,9 @@ class BlueGhost(GhostInterface):
                 go_y = ghost_y + y
                 if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS:
                     if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9) and (go_x, go_y) not in visited\
-                        and Board.coordinates[go_x][go_y] != Board.PINK_GHOST \
-                        and Board.coordinates[go_x][go_y] != Board.ORANGE_GHOST \
-                        and Board.coordinates[go_x][go_y] != Board.RED_GHOST: #check collision::
+                        and (go_x, go_y) != (Object.pinkGhostX, Object.pinkGhostY) \
+                        and (go_x, go_y) != (Object.orangeGhostX, Object.orangeGhostY) \
+                        and (go_x, go_y) != (Object.redGhostX, Object.redGhostY):  #check collision::
                         queue.append((go_x, go_y))
                         visited.add((go_x, go_y))
                         parent[(go_x, go_y)] = (ghost_x, ghost_y)                        
@@ -99,7 +97,6 @@ class BlueGhost(GhostInterface):
                 while (ghost_x, ghost_y) != ghost:
                     path.append((ghost_x, ghost_y))
                     (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                #path.append((ghost_x, ghost_y))
                 path = path[::-1]
                 return path, expanded_nodes
 
@@ -109,9 +106,9 @@ class BlueGhost(GhostInterface):
                 go_y = ghost_y + y
                 if 0 <= go_x < Board.ROWS and 0 <= go_y < Board.COLS:
                     if (0 <= Board.maze[go_x][go_y] <= 2 or Board.maze[go_x][go_y] == 9) and (go_x, go_y) not in visited\
-                        and Board.coordinates[go_x][go_y] != Board.PINK_GHOST \
-                        and Board.coordinates[go_x][go_y] != Board.ORANGE_GHOST \
-                        and Board.coordinates[go_x][go_y] != Board.RED_GHOST: #check collision:
+                        and (go_x, go_y) != (Object.pinkGhostX, Object.pinkGhostY) \
+                        and (go_x, go_y) != (Object.orangeGhostX, Object.orangeGhostY) \
+                        and (go_x, go_y) != (Object.redGhostX, Object.redGhostY):  #check collision::
                         queue.append((go_x, go_y))
                         visited.add((go_x, go_y))
                         parent[(go_x, go_y)] = (ghost_x, ghost_y)                        
@@ -207,7 +204,6 @@ class BlueGhost(GhostInterface):
                 while (ghost_x, ghost_y) != ghost:
                     path.append((ghost_x, ghost_y))
                     (ghost_x, ghost_y) = parent[(ghost_x, ghost_y)]
-                #path.append((ghost_x, ghost_y))
                 path = path[::-1]
                 return path[0]
 

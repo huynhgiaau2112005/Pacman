@@ -6,14 +6,12 @@ import pygame
 import time
 import tracemalloc #de lay bo nho
 import math
-import os
 
 # testcases: (ghost, pacman)
 testcases = [((16, 13), (24, 14)),
              ((6, 2), (24, 26)),
              ((30, 27), (4, 2)),
              ((27, 3), (29, 27)),
-             #((15, 20), (15, 21))]
              ((21, 3), (15, 21))]
 testcaseID = 0
 
@@ -28,6 +26,11 @@ class Level4:
     # Setup tọa độ ma trận
     Object.redGhostX, Object.redGhostY = testcases[testcaseID][0]
     Object.pacmanX, Object.pacmanY = testcases[testcaseID][1]
+    Object.pinkGhostX, Object.pinkGhostY = -1, -1
+    Object.blueGhostX, Object.blueGhostY = -1, -1
+    Object.orangeGhostX, Object.orangeGhostY = -1, -1
+
+    Board.maze = [row[:] for row in Board.initMaze]
 
     # Setup tọa độ thực
     (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
@@ -58,8 +61,6 @@ class Level4:
 
     while Config.running and not quit:
       self.setup()
-      for i in range(len(Board.coordinates)):
-          print(Board.coordinates[i])
 
       Sounds().dramatic_theme_music()
       ghost_move_sound = pygame.mixer.Sound("Assets/sounds/ghost_move.mp3")

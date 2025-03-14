@@ -40,7 +40,6 @@ class Pacman(Entity):
       self.drawdir(direction)
         
   def keyboardHandle(self):
-    #keys = pygame.key.get_pressed() # Kiểm tra giá trị keys
     keys = Config.KeyMovePacman
 
     if keys is None:  

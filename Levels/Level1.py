@@ -5,7 +5,6 @@ from Entities.Entity import Entity
 from Levels.ExperimentBox import ExperimentBox
 import time
 import tracemalloc #de lay bo nho
-import os
 import pygame
 import math
 
@@ -14,7 +13,6 @@ testcases = [((16, 13), (24, 14)),
              ((6, 2), (24, 26)),
              ((30, 27), (4, 2)),
              ((27, 3), (29, 27)),
-             #((15, 20), (15, 21))]
              ((21, 3), (15, 21))]
 testcaseID = 0
 
@@ -26,9 +24,14 @@ class Level1:
         pass
 
     def setup(self):
+        Board.maze = [row[:] for row in Board.initMaze]
+
         # Setup tọa độ ma trận
         Object.blueGhostX, Object.blueGhostY = testcases[testcaseID][0]
         Object.pacmanX, Object.pacmanY = testcases[testcaseID][1]
+        Object.pinkGhostX, Object.pinkGhostY = -1, -1
+        Object.redGhostX, Object.redGhostY = -1, -1
+        Object.orangeGhostX, Object.orangeGhostY = -1, -1
 
         # Setup tọa độ thực
         (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
@@ -135,13 +138,6 @@ class Level1:
                 if not listPos:
                     ghost_move_sound.stop()
                     Sounds.dramatic_theme_music_sound.stop()
-                    # EM().blueGhost.move()
-
-                    # EM().maze.draw()
-                    # EM().pacman.draw()
-                    # EM().blueGhost.draw()
-                    # pygame.display.flip()
-                    # #time.sleep(1)
                     break
 
                 Config.screen.blit(shortkey, (580, 800 - 30))  

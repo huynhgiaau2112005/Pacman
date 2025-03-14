@@ -1,9 +1,6 @@
 from Entities.Entity import Entity
 from EntitiesManager import EntitiesManager as EM
 from Config import Config, Object, Sounds, Board, Material
-from collections import deque
-import threading
-import time
 import pygame
 
 start = False
@@ -23,6 +20,8 @@ class Level5:
 
     def setup(self):
         global PacmanGetCaught, quit, start, isSettingPos, EntityBeingSetIndex
+
+        Board.maze = [row[:] for row in Board.initMaze]
 
         PacmanGetCaught = False
         quit = False
@@ -49,22 +48,9 @@ class Level5:
         (Object.realPinkGhostX, Object.realPinkGhostY) = Entity.getRealCoordinates((Object.pinkGhostX, Object.pinkGhostY), Object.PINK_GHOST_SIZE)
         (Object.realBlueGhostX, Object.realBlueGhostY) = Entity.getRealCoordinates((Object.blueGhostX, Object.blueGhostY), Object.BLUE_GHOST_SIZE)
 
-        # # Setup ma trận Coordinates
-        # Board.coordinates[Object.blueGhostX][Object.blueGhostY] = Board.BLUE_GHOST
-        # Board.coordinates[Object.pinkGhostX][Object.pinkGhostY] = Board.PINK_GHOST
-        # Board.coordinates[Object.orangeGhostX][Object.orangeGhostY] = Board.ORANGE_GHOST
-        # Board.coordinates[Object.redGhostX][Object.redGhostY] = Board.RED_GHOST
-        # Board.coordinates[Object.pacmanX][Object.pacmanY] = Board.PACMAN 
-
         for i in range(len(Board.coordinates)):
             for j in range(len(Board.coordinates[i])):
                 Board.coordinates[i][j] = Board.BLANK
-                # if (i, j) not in ((Object.blueGhostX, Object.blueGhostY), \
-                #                   (Object.pinkGhostX, Object.pinkGhostY), \
-                #                   (Object.orangeGhostX, Object.orangeGhostY), \
-                #                   (Object.redGhostX, Object.redGhostY), \
-                #                   (Object.pacmanX, Object.pacmanY)):
-                #     Board.coordinates[i][j] = Board.BLANK
 
     def isCaught(self):
         pacmanPos = (Object.pacmanX, Object.pacmanY)
@@ -226,13 +212,10 @@ class Level5:
                 if start and not isSettingPos and not PacmanGetCaught:
                     if countFrames % 15 == 0:
                         EM().blueGhost.updatePos()
-                        PacmanGetCaught = self.isCaught()
                         EM().pinkGhost.updatePos()
-                        PacmanGetCaught = self.isCaught()
                         EM().orangeGhost.updatePos()
-                        PacmanGetCaught = self.isCaught()
                         EM().redGhost.updatePos()
-                        PacmanGetCaught = self.isCaught()
+                    PacmanGetCaught = self.isCaught()
                     EM().blueGhost.move()
                     EM().pinkGhost.move()
                     EM().orangeGhost.move()
@@ -307,8 +290,6 @@ class Level5:
                         Sounds.click_sound.play()
                         Config.running = False
                         return
-                    if event.key == pygame.K_SPACE:
-                        print("space is pressed when win")
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     for text, x, y, w, h in buttons:
                         if x - w // 2 <= mouse_x <= x + w // 2 and y - h // 2 <= mouse_y <= y + h // 2:

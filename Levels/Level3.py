@@ -5,7 +5,6 @@ from Levels.ExperimentBox import ExperimentBox
 import pygame
 import time
 import tracemalloc #de lay bo nho
-import os
 import math
 import pygame
 
@@ -14,7 +13,6 @@ testcases = [((16, 13), (24, 14)),
              ((6, 2), (24, 26)),
              ((30, 27), (4, 2)),
              ((27, 3), (29, 27)),
-             #((15, 20), (15, 21))]
              ((21, 3), (15, 21))]
 testcaseID = 0
 
@@ -28,6 +26,11 @@ class Level3:
   def setup(self):
     Object.orangeGhostX, Object.orangeGhostY = testcases[testcaseID][0]
     Object.pacmanX, Object.pacmanY = testcases[testcaseID][1]
+    Object.pinkGhostX, Object.pinkGhostY = -1, -1
+    Object.redGhostX, Object.redGhostY = -1, -1
+    Object.blueGhostX, Object.blueGhostY = -1, -1
+
+    Board.maze = [row[:] for row in Board.initMaze]
 
     # Setup tọa độ thực
     (Object.realPacmanX, Object.realPacmanY) = Entity.getRealCoordinates((Object.pacmanX, Object.pacmanY), Object.PACMAN_SIZE)
