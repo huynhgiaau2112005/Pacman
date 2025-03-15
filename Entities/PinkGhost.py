@@ -50,7 +50,7 @@ class PinkGhost(GhostInterface):
             return None 
             
         ids_direction = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
-        max_depth_limit = 100
+        max_depth_limit = 50
         depth_limit = 1
         while depth_limit <= max_depth_limit:
             stack = deque([(ghost)])
@@ -169,7 +169,7 @@ class PinkGhost(GhostInterface):
             return None 
             
         ids_direction = [(1, 0), (-1, 0), (0, -1), (0, 1)] # Xuống, Lên, Trái, Phải
-        max_depth_limit = 100
+        max_depth_limit = 30
         depth_limit = 1
         while depth_limit <= max_depth_limit:
             stack = deque([(ghost)])

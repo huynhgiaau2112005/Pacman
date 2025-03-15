@@ -17,7 +17,7 @@ exitButtonY = 650
 
 buttons = [
     (buttonX - 100, 300, buttonWidth - 100, buttonHeight, "BFS", Level1()),
-    (buttonX - 100, 370, buttonWidth - 100, buttonHeight, "DFS", Level2()),
+    (buttonX - 100, 370, buttonWidth - 100, buttonHeight, "IDS", Level2()),
     (buttonX + 200, 300, buttonWidth - 100, buttonHeight, "UCS", Level3()),
     (buttonX + 200, 370, buttonWidth - 100, buttonHeight, "A*", Level4()),
     (buttonX, 480, buttonWidth, buttonHeight, "Parallel Execution", Level5()),

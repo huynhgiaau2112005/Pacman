@@ -60,7 +60,7 @@ class OrangeGhost(GhostInterface):
         visited = set([])
         
         DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)] # lên, xuống, phải, trái
-        PATH_LIMIT = 100
+        PATH_LIMIT = 25
 
         while heap:
             (f, x, y, path) = heapq.heappop(heap)
